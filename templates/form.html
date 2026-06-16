@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block page_title %}{{ 'Tambah' if mode=='tambah' else 'Edit' }} Mahasiswa{% endblock %}
+{% block content %}
+
+<div class="breadcrumb">
+  <a href="{{ url_for('mahasiswa') }}"><i class="fas fa-users"></i> Data Mahasiswa</a>
+  <span><i class="fas fa-chevron-right" style="font-size:10px"></i></span>
+  <span>{{ 'Tambah Mahasiswa Baru' if mode=='tambah' else 'Edit Data Mahasiswa' }}</span>
+</div>
+
+<div class="card" style="max-width:780px">
+  <div class="card-header">
+    <h2>
+      <i class="fas fa-{{ 'user-plus' if mode=='tambah' else 'user-edit' }}" style="color:var(--primary);margin-right:8px"></i>
+      {{ 'Tambah Mahasiswa Baru' if mode=='tambah' else 'Edit Data Mahasiswa' }}
+    </h2>
+    <p>{{ 'Isi semua data dengan lengkap dan benar.' if mode=='tambah' else 'Perbarui data mahasiswa.' }} Kolom bertanda <span style="color:var(--danger)">*</span> wajib diisi.</p>
+  </div>
+  <div class="card-body">
+
+    {% if error %}
+    <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+      {% if mode == 'tambah' %}
+      <div class="form-group">
+        <label class="form-label">NIM <span>*</span></label>
+        <input type="text" name="nim" class="form-control" value="{{ data.get('nim','') }}"
+               placeholder="Contoh: 2024010001" maxlength="12" required>
+        <div class="form-hint">10–12 digit angka (Nomor Induk Mahasiswa)</div>
+      </div>
+      {% else %}
+      <div class="form-group">
+        <label class="form-label">NIM</label>
+        <input type="text" class="form-control" value="{{ data.get('nim','') }}" disabled
+               style="background:#F0F4FA;color:var(--muted)">
+        <div class="form-hint">NIM tidak dapat diubah</div>
+      </div>
+      {% endif %}
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nama Lengkap <span>*</span></label>
+          <input type="text" name="nama" class="form-control" value="{{ data.get('nama','') }}"
+                 placeholder="Contoh: Ahmad Rizki Pratama" required>
+          <div class="form-hint">3–60 karakter, hanya huruf dan spasi</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Program Studi <span>*</span></label>
+          <select name="prodi" class="form-control" required>
+            {% for p in prodi_list %}
+            <option value="{{ p }}" {{ 'selected' if data.get('prodi')==p }}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Email <span>*</span></label>
+          <input type="email" name="email" class="form-control" value="{{ data.get('email','') }}"
+                 placeholder="Contoh: ahmad@mhs.unpam.ac.id" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">No HP <span>*</span></label>
+          <input type="text" name="no_hp" class="form-control" value="{{ data.get('no_hp','') }}"
+                 placeholder="Contoh: 08123456789" required>
+          <div class="form-hint">Format: 08xxx / +62xxx</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">IPK <span>*</span></label>
+          <input type="number" name="ipk" class="form-control" value="{{ data.get('ipk','') }}"
+                 placeholder="Contoh: 3.75" step="0.01" min="0" max="4" required>
+          <div class="form-hint">Nilai 0.00 – 4.00</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Semester <span>*</span> <span id="semVal" style="color:var(--primary);font-size:14px">{{ data.get('semester', 1) }}</span></label>
+          <input type="range" name="semester" id="semSlider" min="1" max="14" step="1"
+                 value="{{ data.get('semester', 1) }}"
+                 style="width:100%;accent-color:var(--primary);height:6px;cursor:pointer"
+                 oninput="document.getElementById('semVal').textContent=this.value">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px">
+            <span>Sem 1</span><span>Sem 14</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:8px">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i> {{ 'Simpan Data' if mode=='tambah' else 'Perbarui Data' }}
+        </button>
+        <a href="{{ url_for('mahasiswa') }}" class="btn btn-outline">
+          <i class="fas fa-times"></i> Batal
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

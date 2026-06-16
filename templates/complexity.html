@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block page_title %}Time Complexity{% endblock %}
+{% block content %}
+
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fas fa-code-branch" style="color:var(--primary);margin-right:8px"></i>Estimasi Time Complexity</h2>
+    <p>Analisis kompleksitas waktu dan ruang untuk semua algoritma yang digunakan dalam sistem ini</p>
+  </div>
+  <div class="card-body">
+
+  <!-- PENCARIAN -->
+  <div style="margin-bottom:28px">
+    <div style="background:var(--primary);color:#fff;padding:10px 18px;border-radius:9px;font-weight:700;font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+      <i class="fas fa-search"></i> Algoritma Pencarian
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Algoritma</th><th>Best Case</th><th>Average Case</th><th>Worst Case</th><th>Space</th><th>Keterangan</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Linear Search</b></td>
+            <td><span class="badge badge-green">O(1)</span></td>
+            <td><span class="badge badge-blue">O(n)</span></td>
+            <td><span class="badge badge-blue">O(n)</span></td>
+            <td><span class="badge badge-yellow">O(1)</span></td>
+            <td style="font-size:12.5px;color:var(--muted)">Iterasi satu per satu, cocok semua field</td>
+          </tr>
+          <tr>
+            <td><b>Binary Search</b></td>
+            <td><span class="badge badge-green">O(1)</span></td>
+            <td><span class="badge badge-green">O(log n)</span></td>
+            <td><span class="badge badge-green">O(log n)</span></td>
+            <td><span class="badge badge-yellow">O(1)</span></td>
+            <td style="font-size:12.5px;color:var(--muted)">Data harus terurut, hanya exact match NIM</td>
+          </tr>
+          <tr>
+            <td><b>Sequential Search</b></td>
+            <td><span class="badge badge-green">O(1)</span></td>
+            <td><span class="badge badge-blue">O(n)</span></td>
+            <td><span class="badge badge-blue">O(n)</span></td>
+            <td><span class="badge badge-yellow">O(1)</span></td>
+            <td style="font-size:12.5px;color:var(--muted)">Exact match NIM, stop saat ditemukan</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PENGURUTAN -->
+  <div style="margin-bottom:28px">
+    <div style="background:#1E40AF;color:#fff;padding:10px 18px;border-radius:9px;font-weight:700;font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+      <i class="fas fa-sort"></i> Algoritma Pengurutan
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Algoritma</th><th>Best Case</th><th>Average Case</th><th>Worst Case</th><th>Space</th><th>Stabil</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Bubble Sort</b></td>
+            <td><span class="badge badge-green">O(n)</span></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B">O(n²)</span></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B">O(n²)</span></td>
+            <td><span class="badge badge-yellow">O(1)</span></td>
+            <td><span class="badge badge-green">Ya</span></td>
+          </tr>
+          <tr>
+            <td><b>Insertion Sort</b></td>
+            <td><span class="badge badge-green">O(n)</span></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B">O(n²)</span></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B">O(n²)</span></td>
+            <td><span class="badge badge-yellow">O(1)</span></td>
+            <td><span class="badge badge-green">Ya</span></td>
+          </tr>
+          <tr>
+            <td><b>Selection Sort</b></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B">O(n²)</span></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B">O(n²)</span></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B">O(n²)</span></td>
+            <td><span class="badge badge-yellow">O(1)</span></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B">Tidak</span></td>
+          </tr>
+          <tr>
+            <td><b>Merge Sort</b></td>
+            <td><span class="badge badge-green">O(n log n)</span></td>
+            <td><span class="badge badge-green">O(n log n)</span></td>
+            <td><span class="badge badge-green">O(n log n)</span></td>
+            <td><span class="badge badge-blue">O(n)</span></td>
+            <td><span class="badge badge-green">Ya</span></td>
+          </tr>
+          <tr>
+            <td><b>Shell Sort</b></td>
+            <td><span class="badge badge-green">O(n log n)</span></td>
+            <td><span class="badge badge-blue">O(n^1.5)</span></td>
+            <td><span class="badge badge-blue">O(n²)</span></td>
+            <td><span class="badge badge-yellow">O(1)</span></td>
+            <td><span class="badge" style="background:#FEE2E2;color:#991B1B">Tidak</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CRUD -->
+  <div>
+    <div style="background:#166534;color:#fff;padding:10px 18px;border-radius:9px;font-weight:700;font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+      <i class="fas fa-database"></i> Operasi CRUD & File I/O
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Operasi</th><th>Best Case</th><th>Worst Case</th><th>Space</th><th>Keterangan</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Tambah (append)</b></td><td><span class="badge badge-green">O(1)</span></td><td><span class="badge badge-green">O(1)</span></td><td><span class="badge badge-yellow">O(1)</span></td><td style="font-size:12.5px;color:var(--muted)">Insert ke akhir list</td></tr>
+          <tr><td><b>Cek duplikat NIM</b></td><td><span class="badge badge-green">O(1)</span></td><td><span class="badge badge-blue">O(n)</span></td><td><span class="badge badge-yellow">O(1)</span></td><td style="font-size:12.5px;color:var(--muted)">Cek sebelum insert</td></tr>
+          <tr><td><b>Cari by NIM (edit/hapus)</b></td><td><span class="badge badge-green">O(1)</span></td><td><span class="badge badge-blue">O(n)</span></td><td><span class="badge badge-yellow">O(1)</span></td><td style="font-size:12.5px;color:var(--muted)">Linear scan NIM</td></tr>
+          <tr><td><b>Hapus by NIM</b></td><td><span class="badge badge-blue">O(n)</span></td><td><span class="badge badge-blue">O(n)</span></td><td><span class="badge badge-blue">O(n)</span></td><td style="font-size:12.5px;color:var(--muted)">Filter list baru</td></tr>
+          <tr><td><b>Baca file JSON</b></td><td><span class="badge badge-blue">O(n)</span></td><td><span class="badge badge-blue">O(n)</span></td><td><span class="badge badge-blue">O(n)</span></td><td style="font-size:12.5px;color:var(--muted)">Parse seluruh file</td></tr>
+          <tr><td><b>Simpan file JSON</b></td><td><span class="badge badge-blue">O(n)</span></td><td><span class="badge badge-blue">O(n)</span></td><td><span class="badge badge-blue">O(n)</span></td><td style="font-size:12.5px;color:var(--muted)">Tulis seluruh data</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  </div>
+</div>
+{% endblock %}

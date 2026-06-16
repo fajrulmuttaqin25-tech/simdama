@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Import Data Mahasiswa{% endblock %}
+
+{% block page_title %}Import Data Mahasiswa{% endblock %}
+
+{% block content %}
+
+<div style="margin-bottom:20px">
+  <a href="{{ url_for('mahasiswa') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Kembali</a>
+  <a href="{{ url_for('tambah') }}" class="btn btn-primary"><i class="fas fa-user-plus"></i> Input Manual</a>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h2><i class="fas fa-upload"></i> Import Data dari File CSV</h2>
+    <p>Upload file CSV untuk menambah banyak data sekaligus</p>
+  </div>
+  <div class="card-body">
+    <form method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label class="form-label">Pilih File CSV</label>
+        <input type="file" class="form-control" name="file" accept=".csv" required>
+        <div class="form-hint">File harus berformat .csv (Comma Separated Values)</div>
+      </div>
+      
+      <div class="alert alert-info" style="background:#EFF6FF;border:1px solid #BFDBFE;margin-bottom:20px">
+        <strong><i class="fas fa-info-circle"></i> Format CSV yang benar:</strong><br>
+        <code>nim,nama,email,no_hp,prodi,semester,ipk</code><br><br>
+        <strong>Contoh baris data:</strong><br>
+        <code>241011450396,Muhamad Fajrul Muttaqin,fajrulmuttaqin3@gmail.com,085890095374,Teknik Informatika,3,3.50</code>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-upload"></i> Upload & Import
+      </button>
+      
+      <button type="button" class="btn btn-outline" onclick="downloadTemplate()">
+        <i class="fas fa-download"></i> Download Template CSV
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+function downloadTemplate() {
+    var headers = ['nim', 'nama', 'email', 'no_hp', 'prodi', 'semester', 'ipk'];
+    var sampleRow = ['241011450396', 'Muhamad Fajrul Muttaqin', 'fajrulmuttaqin3@gmail.com', '085890095374', 'Teknik Informatika', '3', '3.50'];
+    var csvContent = headers.join(',') + '\n' + sampleRow.join(',');
+    var blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'template_import.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+</script>
+{% endblock %}

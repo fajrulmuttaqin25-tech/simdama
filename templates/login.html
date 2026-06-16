@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login – SIMDAMA UNPAM</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;
+  display:flex;align-items:stretch;
+}
+
+.left-panel{
+  flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column;
+  justify-content:flex-end;min-height:100vh;
+}
+.left-panel .bg-img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+}
+.left-panel .overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(0,27,80,0.55) 0%,rgba(0,15,50,0.85) 100%);
+}
+.left-panel .content{
+  position:relative;z-index:2;padding:40px 44px;
+}
+.left-panel .logo-row{
+  display:flex;align-items:center;gap:16px;margin-bottom:40px;
+}
+.left-panel .logo-row img{
+  width:64px;height:64px;border-radius:50%;object-fit:cover;
+  border:3px solid #F5B800;box-shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+.left-panel .logo-row .txt .univ{
+  font-size:18px;font-weight:800;color:#fff;letter-spacing:.5px;line-height:1.2;
+}
+.left-panel .logo-row .txt .tagline{
+  font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px;
+}
+.left-panel .headline{
+  font-size:36px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:14px;
+}
+.left-panel .headline span{color:#F5B800}
+.left-panel .sub{
+  font-size:15px;color:rgba(255,255,255,0.65);line-height:1.7;max-width:420px;
+}
+.features{display:flex;gap:24px;margin-top:36px;flex-wrap:wrap}
+.feature-item{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+  border-radius:10px;padding:10px 16px;backdrop-filter:blur(6px);
+}
+.feature-item i{color:#F5B800;font-size:16px}
+.feature-item span{font-size:12.5px;color:rgba(255,255,255,0.85);font-weight:500}
+.left-panel .footer-note{
+  font-size:11.5px;color:rgba(255,255,255,0.35);margin-top:48px;
+}
+
+.right-panel{
+  width:460px;min-height:100vh;background:#fff;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:48px 44px;flex-shrink:0;
+}
+.right-panel .welcome{
+  font-size:13px;color:#6B7A99;font-weight:600;letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:10px;
+}
+.right-panel h2{
+  font-size:28px;font-weight:800;color:#1A2340;margin-bottom:6px;
+}
+.right-panel .sub{font-size:14px;color:#6B7A99;margin-bottom:36px;line-height:1.6}
+
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-size:13px;font-weight:700;color:#1A2340;margin-bottom:8px}
+.input-wrap{position:relative}
+.input-wrap i.icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:#A0AEBF;font-size:15px;pointer-events:none;
+}
+.input-wrap input{
+  width:100%;padding:13px 14px 13px 42px;
+  border:1.5px solid #E2E8F5;border-radius:10px;
+  font-size:14.5px;font-family:inherit;color:#1A2340;background:#F8FAFD;
+  outline:none;transition:border-color .18s,box-shadow .18s,background .18s;
+}
+.input-wrap input:focus{
+  border-color:#003B8E;background:#fff;
+  box-shadow:0 0 0 3px rgba(0,59,142,0.09);
+}
+.input-wrap .toggle-pass{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  color:#A0AEBF;cursor:pointer;font-size:14px;
+  background:none;border:none;padding:0;
+}
+.input-wrap .toggle-pass:hover{color:#003B8E}
+
+.error-box{
+  background:#FEE2E2;border:1px solid #FCA5A5;border-radius:10px;
+  padding:12px 16px;font-size:13.5px;color:#991B1B;margin-bottom:22px;
+  display:flex;align-items:center;gap:8px;font-weight:500;
+}
+
+.btn-login{
+  width:100%;padding:14px;background:#003B8E;color:#fff;
+  border:none;border-radius:10px;font-size:15px;font-weight:700;
+  font-family:inherit;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-login:hover{background:#1565C0;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,59,142,0.3)}
+.btn-login:active{transform:translateY(0)}
+
+.demo-info{
+  background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;
+  padding:14px 16px;margin-top:22px;
+}
+.demo-info p{font-size:12px;font-weight:700;color:#1D4ED8;margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;}
+.demo-info .cred{display:flex;justify-content:space-between;margin-bottom:4px}
+.demo-info .cred span{font-size:12px;color:#1E40AF;font-weight:500}
+.demo-info code{background:#DBEAFE;padding:2px 8px;border-radius:4px;font-size:11.5px;color:#1D4ED8;cursor:pointer}
+.demo-info code:hover{background:#BFDBFE}
+
+/* LOADING STYLE */
+#loadingSpinner {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+}
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #E2E8F5;
+    border-top-color: #003B8E;
+    border-right-color: #003B8E;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 10px auto;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@media(max-width:800px){
+  .left-panel{display:none}
+  .right-panel{width:100%;padding:40px 28px}
+}
+</style>
+</head>
+<body>
+
+<div class="left-panel">
+  <img class="bg-img" src="{{ url_for('static', filename='img/unpam_bg.jpg') }}" alt="UNPAM Campus">
+  <div class="overlay"></div>
+  <div class="content">
+    <div class="logo-row">
+      <img src="{{ url_for('static', filename='img/logo_unpam.jpg') }}" alt="Logo UNPAM">
+      <div class="txt">
+        <div class="univ">Universitas Pamulang</div>
+        <div class="tagline">Jl. Surya Kencana No.1, Pamulang, Tangerang Selatan</div>
+      </div>
+    </div>
+    <div class="headline">Sistem Informasi<br>Manajemen <span>Data Mahasiswa</span></div>
+    <p class="sub">Platform digital untuk pengelolaan data akademik mahasiswa secara efisien, terintegrasi, dan aman.</p>
+    <div class="features">
+      <div class="feature-item"><i class="fas fa-database"></i><span>CRUD Lengkap</span></div>
+      <div class="feature-item"><i class="fas fa-search"></i><span>Pencarian Cepat</span></div>
+      <div class="feature-item"><i class="fas fa-sort"></i><span>5 Algoritma Sort</span></div>
+      <div class="feature-item"><i class="fas fa-shield-alt"></i><span>Validasi Regex</span></div>
+    </div>
+    <div class="footer-note">© 2024 Universitas Pamulang — SIMDAMA v1.0</div>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="welcome">Selamat Datang</div>
+  <h2>Masuk ke Sistem</h2>
+  <p class="sub">Gunakan akun yang telah diberikan oleh administrator untuk mengakses SIMDAMA.</p>
+
+  {% if error %}
+  <div class="error-box"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('login') }}" id="loginForm">
+    <div class="form-group">
+      <label class="form-label">Username / NIM</label>
+      <div class="input-wrap">
+        <i class="fas fa-user icon"></i>
+        <input type="text" name="username" id="usernameInput" placeholder="Masukkan username atau NIM" autocomplete="username" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="input-wrap">
+        <i class="fas fa-lock icon"></i>
+        <input type="password" name="password" id="passInput" placeholder="Masukkan password" autocomplete="current-password" required>
+        <button type="button" class="toggle-pass" onclick="togglePass()">
+          <i class="fas fa-eye" id="passIcon"></i>
+        </button>
+      </div>
+    </div>
+    <button type="submit" class="btn-login" id="loginBtn">
+      <i class="fas fa-sign-in-alt"></i> Masuk Sekarang
+    </button>
+    
+    <!-- LOADING SPINNER -->
+    <div id="loadingSpinner">
+      <div class="spinner"></div>
+      <p style="font-size:13px;color:#6B7A99">Memproses login, harap tunggu...</p>
+    </div>
+  </form>
+
+  <div class="demo-info">
+    <p><i class="fas fa-info-circle"></i> Akun Demo</p>
+    <div class="cred"><span>Admin</span><div><code onclick="fillLogin('admin','admin123')">admin</code> / <code onclick="fillLogin('admin','admin123')">admin123</code></div></div>
+    <div class="cred"><span>Dosen</span><div><code onclick="fillLogin('dosen','dosen123')">dosen</code> / <code onclick="fillLogin('dosen','dosen123')">dosen123</code></div></div>
+    
+    <hr style="margin:10px 0">
+    <p><i class="fas fa-graduation-cap"></i> Login Mahasiswa</p>
+    <div class="cred"><span>Mahasiswa</span><div>Gunakan <strong>NIM</strong> sebagai username<br>Password: <code>NIM + 123</code></div></div>
+    <div class="cred"><span>Contoh</span><div><code onclick="fillLogin('241011450396','241011450396123')">241011450396</code> / <code onclick="fillLogin('241011450396','241011450396123')">241011450396123</code></div></div>
+  </div>
+</div>
+
+<script>
+function togglePass(){
+  var i = document.getElementById('passInput');
+  var ic = document.getElementById('passIcon');
+  if(i.type==='password'){i.type='text';ic.className='fas fa-eye-slash'}
+  else{i.type='password';ic.className='fas fa-eye'}
+}
+function fillLogin(u,p){
+  document.querySelector('input[name=username]').value=u;
+  document.querySelector('input[name=password]').value=p;
+}
+
+// LOADING SCREEN
+document.getElementById('loginForm').addEventListener('submit', function() {
+  document.getElementById('loadingSpinner').style.display = 'block';
+  document.getElementById('loginBtn').disabled = true;
+  document.getElementById('loginBtn').innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Memproses...';
+});
+
+// Jika ada error, sembunyikan loading
+{% if error %}
+document.getElementById('loadingSpinner').style.display = 'none';
+document.getElementById('loginBtn').disabled = false;
+document.getElementById('loginBtn').innerHTML = '<i class="fas fa-sign-in-alt"></i> Masuk Sekarang';
+{% endif %}
+</script>
+</body>
+</html>

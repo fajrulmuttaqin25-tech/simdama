@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block page_title %}Pengurutan Data{% endblock %}
+{% block content %}
+
+<div class="card" style="margin-bottom:20px">
+  <div class="card-header">
+    <h2><i class="fas fa-sort-amount-down" style="color:var(--primary);margin-right:8px"></i>Pengurutan Data Mahasiswa</h2>
+    <p>Pilih algoritma dan kunci pengurutan</p>
+  </div>
+  <div class="card-body">
+    <form method="POST">
+      <div class="form-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+        <div class="form-group">
+          <label class="form-label">Algoritma</label>
+          <select name="algo" class="form-control">
+            <option value="bubble" {{ 'selected' if algo=='bubble' }}>Bubble Sort — O(n²)</option>
+            <option value="insertion" {{ 'selected' if algo=='insertion' }}>Insertion Sort — O(n²)</option>
+            <option value="selection" {{ 'selected' if algo=='selection' }}>Selection Sort — O(n²)</option>
+            <option value="merge" {{ 'selected' if algo=='merge' }}>Merge Sort — O(n log n)</option>
+            <option value="shell" {{ 'selected' if algo=='shell' }}>Shell Sort — O(n log n)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Urutkan Berdasarkan</label>
+          <select name="key" class="form-control">
+            <option value="nim" {{ 'selected' if key=='nim' }}>NIM</option>
+            <option value="nama" {{ 'selected' if key=='nama' }}>Nama</option>
+            <option value="prodi" {{ 'selected' if key=='prodi' }}>Program Studi</option>
+            <option value="semester" {{ 'selected' if key=='semester' }}>Semester</option>
+            <option value="ipk" {{ 'selected' if key=='ipk' }}>IPK</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Urutan</label>
+          <select name="order" class="form-control">
+            <option value="asc" {{ 'selected' if order=='asc' }}>Ascending ↑</option>
+            <option value="desc" {{ 'selected' if order=='desc' }}>Descending ↓</option>
+          </select>
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end">
+          <button type="submit" class="btn btn-primary" style="width:100%">
+            <i class="fas fa-play"></i> Urutkan
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if info %}
+<div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:13px 18px;margin-bottom:16px;font-size:13.5px;color:#1E40AF">
+  <i class="fas fa-info-circle"></i> {{ info|safe }}
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="tbl-wrap">
+    {% if hasil %}
+    <table>
+      <thead>
+        <tr><th>#</th><th>NIM</th><th>Nama</th><th>Program Studi</th><th>Semester</th><th>IPK</th></tr>
+      </thead>
+      <tbody>
+        {% for m in hasil %}
+        <tr>
+          <td style="color:var(--muted)">{{ loop.index }}</td>
+          <td><code style="background:#EEF2FF;padding:2px 8px;border-radius:5px;font-size:12px;color:var(--primary);font-weight:700">{{ m.nim }}</code></td>
+          <td style="font-weight:600">{{ m.nama }}</td>
+          <td><span class="badge badge-blue">{{ m.prodi }}</span></td>
+          <td style="text-align:center"><span class="badge badge-yellow">Sem {{ m.semester }}</span></td>
+          <td style="text-align:center"><span class="badge {% if m.ipk|float>=3.5 %}badge-green{% elif m.ipk|float>=3.0 %}badge-blue{% else %}badge-yellow{% endif %}">{{ "%.2f"|format(m.ipk|float) }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty"><i class="fas fa-sort"></i><p>Belum ada data untuk diurutkan</p></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

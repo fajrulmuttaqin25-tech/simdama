@@ -1,0 +1,12 @@
+{
+  "admin": {
+    "password": "scrypt:32768:8:1$5LLjlokw78rEm372$e9b1ea7a66b3704d825445c3ea29cd8cb660908b30d7fd05d2835c656f45b9177c98d83342fb6095d444a39003bf0fda1b834b6c7736870e638fb0437f1c01d2",
+    "role": "Admin",
+    "nama": "Administrator"
+  },
+  "dosen": {
+    "password": "scrypt:32768:8:1$F149V7gchUQCdNtL$d3a9e98e7a31cbaefa351897c3b8e6c92550e6f64b65fe8b932b2d14d13f3d06a7057377711d785870eeeaf865091aa706773e594252b371ab56745c2ec8a24f",
+    "role": "Dosen",
+    "nama": "Dosen UNPAM"
+  }
+}

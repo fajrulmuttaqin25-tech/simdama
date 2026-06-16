@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block page_title %}Pencarian Data{% endblock %}
+{% block content %}
+
+<div class="card" style="margin-bottom:20px">
+  <div class="card-header">
+    <h2><i class="fas fa-search" style="color:var(--primary);margin-right:8px"></i>Pencarian Data Mahasiswa</h2>
+    <p>Pilih algoritma pencarian dan masukkan kata kunci</p>
+  </div>
+  <div class="card-body">
+    <form method="POST">
+      <div class="form-row" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="form-group">
+          <label class="form-label">Algoritma Pencarian</label>
+          <select name="algo" class="form-control">
+            <option value="linear" {{ 'selected' if algo=='linear' }}>Linear Search — O(n)</option>
+            <option value="binary" {{ 'selected' if algo=='binary' }}>Binary Search — O(log n)</option>
+            <option value="sequential" {{ 'selected' if algo=='sequential' }}>Sequential Search — O(n)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Field Pencarian</label>
+          <select name="field" class="form-control">
+            <option value="nama" {{ 'selected' if field=='nama' }}>Nama</option>
+            <option value="nim" {{ 'selected' if field=='nim' }}>NIM</option>
+            <option value="prodi" {{ 'selected' if field=='prodi' }}>Program Studi</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Kata Kunci</label>
+          <input type="text" name="keyword" class="form-control" value="{{ keyword }}" placeholder="Masukkan kata kunci..." required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Cari Sekarang</button>
+      <a href="{{ url_for('cari') }}" class="btn btn-outline" style="margin-left:8px">Reset</a>
+    </form>
+  </div>
+</div>
+
+{% if info %}
+<div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:13px 18px;margin-bottom:16px;font-size:13.5px;color:#1E40AF">
+  <i class="fas fa-info-circle"></i> {{ info|safe }}
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="tbl-wrap">
+    {% if hasil %}
+    <table>
+      <thead>
+        <tr><th>#</th><th>NIM</th><th>Nama</th><th>Program Studi</th><th>Semester</th><th>IPK</th><th>Email</th><th>No HP</th></tr>
+      </thead>
+      <tbody>
+        {% for m in hasil %}
+        <tr>
+          <td style="color:var(--muted)">{{ loop.index }}</td>
+          <td><code style="background:#EEF2FF;padding:2px 8px;border-radius:5px;font-size:12px;color:var(--primary);font-weight:700">{{ m.nim }}</code></td>
+          <td style="font-weight:600">{{ m.nama }}</td>
+          <td><span class="badge badge-blue">{{ m.prodi }}</span></td>
+          <td style="text-align:center"><span class="badge badge-yellow">Sem {{ m.semester }}</span></td>
+          <td style="text-align:center"><span class="badge {% if m.ipk|float>=3.5 %}badge-green{% elif m.ipk|float>=3.0 %}badge-blue{% else %}badge-yellow{% endif %}">{{ "%.2f"|format(m.ipk|float) }}</span></td>
+          <td style="font-size:12.5px;color:var(--muted)">{{ m.email }}</td>
+          <td style="font-size:12.5px">{{ m.no_hp }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% elif keyword %}
+    <div class="empty"><i class="fas fa-search"></i><p>Tidak ada data yang cocok dengan "<b>{{ keyword }}</b>"</p></div>
+    {% else %}
+    <div class="empty"><i class="fas fa-search"></i><p>Masukkan kata kunci untuk mencari data mahasiswa</p></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

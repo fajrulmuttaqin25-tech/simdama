@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+
+<!-- STAT CARDS -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon" style="background:#EFF6FF">
+      <i class="fas fa-users" style="color:#1D4ED8"></i>
+    </div>
+    <div>
+      <div class="stat-val" style="color:#1D4ED8">{{ total }}</div>
+      <div class="stat-lbl">Total Mahasiswa</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon" style="background:#F0FDF4">
+      <i class="fas fa-star" style="color:#16A34A"></i>
+    </div>
+    <div>
+      <div class="stat-val" style="color:#16A34A">{{ avg_ipk }}</div>
+      <div class="stat-lbl">Rata-rata IPK</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon" style="background:#FFFBEB">
+      <i class="fas fa-trophy" style="color:#D97706"></i>
+    </div>
+    <div>
+      <div class="stat-val" style="color:#D97706">{{ max_ipk }}</div>
+      <div class="stat-lbl">IPK Tertinggi</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon" style="background:#FFF1F2">
+      <i class="fas fa-graduation-cap" style="color:#E11D48"></i>
+    </div>
+    <div>
+      <div class="stat-val" style="color:#E11D48">{{ prodi_count|length }}</div>
+      <div class="stat-lbl">Program Studi</div>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+  <!-- Distribusi Prodi -->
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-chart-bar" style="color:var(--primary);margin-right:8px"></i>Distribusi Program Studi</h2>
+      <p>Jumlah mahasiswa per program studi</p>
+    </div>
+    <div class="card-body">
+      {% if prodi_count %}
+        {% set max_count = prodi_count[0][1] %}
+        {% for prodi, count in prodi_count %}
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <span style="font-size:13px;font-weight:600;color:var(--text)">{{ prodi }}</span>
+            <span style="font-size:13px;font-weight:700;color:var(--primary)">{{ count }}</span>
+          </div>
+          <div style="background:#EEF2FF;border-radius:20px;height:8px;overflow:hidden">
+            <div style="background:var(--primary);height:100%;border-radius:20px;width:{{ (count/max_count*100)|int }}%;transition:width .5s"></div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty"><i class="fas fa-chart-bar"></i><p>Belum ada data</p></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Data Terbaru -->
+  <div class="card">
+    <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <h2><i class="fas fa-clock" style="color:var(--primary);margin-right:8px"></i>Mahasiswa Terbaru</h2>
+        <p>6 data mahasiswa terakhir ditambahkan</p>
+      </div>
+      <a href="{{ url_for('mahasiswa') }}" class="btn btn-outline btn-sm">Lihat Semua</a>
+    </div>
+    <div class="card-body">
+      {% if recent %}
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>NIM</th>
+              <th>Nama</th>
+              <th>IPK</th>
+              <th>Prodi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in recent %}
+            <tr>
+              <td><code style="background:#EEF2FF;padding:2px 8px;border-radius:5px;font-size:12px;color:var(--primary)">{{ m.nim }}</code></td>
+              <td style="font-weight:600">{{ m.nama }}</td>
+              <td>
+                <span class="badge {% if m.ipk|float >= 3.5 %}badge-green{% elif m.ipk|float >= 3.0 %}badge-blue{% else %}badge-yellow{% endif %}">
+                  {{ "%.2f"|format(m.ipk|float) }}
+                </span>
+              </td>
+              <td style="font-size:12px;color:var(--muted)">{{ m.prodi[:18] }}...</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <div class="empty"><i class="fas fa-users"></i><p>Belum ada data mahasiswa</p></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card" style="margin-top:20px">
+  <div class="card-header">
+    <h2><i class="fas fa-bolt" style="color:var(--gold);margin-right:8px"></i>Aksi Cepat</h2>
+  </div>
+  <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap">
+    <a href="{{ url_for('tambah') }}" class="btn btn-primary"><i class="fas fa-user-plus"></i> Tambah Mahasiswa</a>
+    <a href="{{ url_for('cari') }}" class="btn btn-outline"><i class="fas fa-search"></i> Cari Mahasiswa</a>
+    <a href="{{ url_for('sort_data') }}" class="btn btn-outline"><i class="fas fa-sort"></i> Urutkan Data</a>
+    <a href="{{ url_for('complexity') }}" class="btn btn-outline"><i class="fas fa-code-branch"></i> Time Complexity</a>
+  </div>
+</div>
+{% endblock %}

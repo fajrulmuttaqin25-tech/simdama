@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block page_title %}Data Mahasiswa{% endblock %}
+{% block content %}
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+  <div>
+    <h2 style="font-size:20px;font-weight:800;color:var(--primary)">Data Mahasiswa</h2>
+    <p style="font-size:13px;color:var(--muted);margin-top:3px">Total <b>{{ total }}</b> mahasiswa terdaftar</p>
+  </div>
+  <a href="{{ url_for('tambah') }}" class="btn btn-primary"><i class="fas fa-user-plus"></i> Tambah Mahasiswa</a>
+</div>
+
+<form method="GET" action="{{ url_for('mahasiswa') }}">
+  <div class="search-bar">
+    <i class="fas fa-search" style="color:#A0AEBF"></i>
+    <input type="text" name="q" value="{{ q }}" placeholder="Cari NIM, nama, atau program studi...">
+    <button type="submit">Cari</button>
+    {% if q %}<a href="{{ url_for('mahasiswa') }}" class="btn btn-outline btn-sm" style="white-space:nowrap">Reset</a>{% endif %}
+  </div>
+</form>
+
+{% if q %}
+<div class="alert alert-success" style="margin-bottom:16px">
+  <i class="fas fa-search"></i> Hasil pencarian "<b>{{ q }}</b>" — ditemukan <b>{{ total }}</b> data
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="tbl-wrap">
+    {% if data %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>NIM</th>
+          <th>Nama Lengkap</th>
+          <th>Program Studi</th>
+          <th>Semester</th>
+          <th>IPK</th>
+          <th>Email</th>
+          <th>No HP</th>
+          <th>Tgl Daftar</th>
+          <th style="text-align:center">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in data %}
+        <tr>
+          <td style="color:var(--muted);font-size:12px">{{ loop.index }}</td>
+          <td><code style="background:#EEF2FF;padding:3px 9px;border-radius:6px;font-size:12px;color:var(--primary);font-weight:700">{{ m.nim }}</code></td>
+          <td style="font-weight:600">{{ m.nama }}</td>
+          <td><span class="badge badge-blue">{{ m.prodi }}</span></td>
+          <td style="text-align:center"><span class="badge badge-yellow">Sem {{ m.semester }}</span></td>
+          <td style="text-align:center">
+            <span class="badge {% if m.ipk|float >= 3.5 %}badge-green{% elif m.ipk|float >= 3.0 %}badge-blue{% else %}badge-yellow{% endif %}">
+              {{ "%.2f"|format(m.ipk|float) }}
+            </span>
+          </td>
+          <!-- EMAIL BISA DIKLIK LANGSUNG KE GMAIL -->
+          <td style="font-size:12.5px">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ m.email }}&su=Notifikasi%20Akademik%20SIMDAMA&body=Yth.%20{{ m.nama }}%2C%0A%0A" 
+               target="_blank" 
+               style="color:#003B8E;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+                <i class="fas fa-envelope" style="color:#F5B800;font-size:12px;"></i>
+                {{ m.email }}
+            </a>
+          </td>
+          <td style="font-size:12.5px">{{ m.no_hp }}</td>
+          <td style="font-size:12px;color:var(--muted)">{{ m.tgl_daftar }}</td>
+          <td>
+            <div style="display:flex;gap:6px;justify-content:center">
+              <a href="{{ url_for('edit', nim=m.nim) }}" class="btn btn-primary btn-sm btn-icon" title="Edit">
+                <i class="fas fa-edit"></i>
+              </a>
+              <button type="button" class="btn btn-danger btn-sm btn-icon"
+                      onclick="confirmHapus('{{ m.nim }}','{{ m.nama }}')" title="Hapus">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">
+      <i class="fas fa-users"></i>
+      <p>{% if q %}Tidak ada data yang cocok dengan "{{ q }}"{% else %}Belum ada data mahasiswa. <a href="{{ url_for('tambah') }}" style="color:var(--primary)">Tambah sekarang</a>{% endif %}</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

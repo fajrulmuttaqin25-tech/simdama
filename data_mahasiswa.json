@@ -1,0 +1,332 @@
+[
+  {
+    "nim": "221218921902",
+    "nama": "Ilyasyach Raihan Resfiana",
+    "prodi": "Teknik Elektro",
+    "semester": 6,
+    "ipk": 3.6,
+    "email": "Ilyass2@gmail.com",
+    "no_hp": "082145161714",
+    "tgl_daftar": "10-06-2026 08:36"
+  },
+  {
+    "nim": "231012299021",
+    "nama": "Ahmad Darul Qutni",
+    "prodi": "Pendidikan Bahasa Inggris",
+    "semester": 6,
+    "ipk": 3.78,
+    "email": "darull1@gmail.com",
+    "no_hp": "082163783787",
+    "tgl_daftar": "10-06-2026 08:46"
+  },
+  {
+    "nim": "241011450351",
+    "nama": "Aditya Saputra",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.5,
+    "email": "aditya.saputra@email.com",
+    "no_hp": "081234567801",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450289",
+    "nama": "Ahmad Nuur Fauzy",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.6,
+    "email": "ahmad.fauzy@email.com",
+    "no_hp": "081234567802",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450388",
+    "nama": "Ardhya Krisna Anand Dipta",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.95,
+    "email": "ardhya.krisna@email.com",
+    "no_hp": "081234567803",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450385",
+    "nama": "Biondi Javallino Syauqi",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.7,
+    "email": "biondi@email.com",
+    "no_hp": "081234567804",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450109",
+    "nama": "Daffa Aryl Musyaffa",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.55,
+    "email": "daffa.aryl@email.com",
+    "no_hp": "081234567805",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450251",
+    "nama": "Dhika Miftahul Kautsar",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.65,
+    "email": "dhika@email.com",
+    "no_hp": "081234567806",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450284",
+    "nama": "Dhimas Surya Prakasa",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.45,
+    "email": "dhimas@email.com",
+    "no_hp": "081234567807",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450479",
+    "nama": "Epifani Buranna",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.8,
+    "email": "epifani@email.com",
+    "no_hp": "081234567808",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450638",
+    "nama": "Erhanif Fadillah",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.75,
+    "email": "erhanif@email.com",
+    "no_hp": "081234567809",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450512",
+    "nama": "Fikri Restu Alam",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.6,
+    "email": "fikri@email.com",
+    "no_hp": "081234567810",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450286",
+    "nama": "Julian Dwi Wahyudi",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.6,
+    "email": "julian@email.com",
+    "no_hp": "081234567811",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450118",
+    "nama": "Kevin Januar",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.55,
+    "email": "kevin.januar@email.com",
+    "no_hp": "081234567812",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450089",
+    "nama": "Muamarkeysa Islamay Pasha",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.7,
+    "email": "muamarkeysa@email.com",
+    "no_hp": "081234567813",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450097",
+    "nama": "Muhamad Akbar Febriyanto",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.65,
+    "email": "akbar.febri@email.com",
+    "no_hp": "081234567814",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450093",
+    "nama": "Muhammad Albar Al Hakim",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.6,
+    "email": "albar@email.com",
+    "no_hp": "081234567815",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450396",
+    "nama": "Muhamad Fajrul Muttaqin",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.5,
+    "email": "fajrulmuttaqin3@gmail.com",
+    "no_hp": "085890095374",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450471",
+    "nama": "Nabil Maulida",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.75,
+    "email": "nabil.maulida@email.com",
+    "no_hp": "081234567816",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450438",
+    "nama": "Nuzulia Fahita Ramadani",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.85,
+    "email": "nuzulia@email.com",
+    "no_hp": "081234567817",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450410",
+    "nama": "Raihan Zaky",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.55,
+    "email": "raihan.zaky@email.com",
+    "no_hp": "081234567818",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450090",
+    "nama": "Raina Anatu Qalbii",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.8,
+    "email": "raina@email.com",
+    "no_hp": "081234567819",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450326",
+    "nama": "Rashiqa Salma Nurendra Putri",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.9,
+    "email": "rashiqa@email.com",
+    "no_hp": "081234567820",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450584",
+    "nama": "Renovis Iman Saro Mendrofa",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.8,
+    "email": "renovis@email.com",
+    "no_hp": "081234567821",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450102",
+    "nama": "Rifqi Atha Ramadhan",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.6,
+    "email": "rifqi.atha@email.com",
+    "no_hp": "081234567822",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011402193",
+    "nama": "Rivan Manshurin",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.5,
+    "email": "rivan@email.com",
+    "no_hp": "081234567823",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450222",
+    "nama": "Sahroni",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.55,
+    "email": "sahroni@email.com",
+    "no_hp": "081234567824",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450369",
+    "nama": "Samudra Abdillah",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.7,
+    "email": "samudra@email.com",
+    "no_hp": "081234567825",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450391",
+    "nama": "Satria Erlangga",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.65,
+    "email": "satria.erlangga@email.com",
+    "no_hp": "081234567826",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450258",
+    "nama": "Septian Adam",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.6,
+    "email": "septian.adam@email.com",
+    "no_hp": "081234567827",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450121",
+    "nama": "Siti Nur Haliza",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.85,
+    "email": "siti.haliza@email.com",
+    "no_hp": "081234567828",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450456",
+    "nama": "Sutan Salsabila",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.75,
+    "email": "sutan@email.com",
+    "no_hp": "081234567829",
+    "tgl_daftar": "13-06-2026 21:25"
+  },
+  {
+    "nim": "241011450306",
+    "nama": "Zidan Achilla Muhammad Azka",
+    "prodi": "Teknik Informatika",
+    "semester": 3,
+    "ipk": 3.55,
+    "email": "zidan@email.com",
+    "no_hp": "081234567830",
+    "tgl_daftar": "13-06-2026 21:25"
+  }
+]
