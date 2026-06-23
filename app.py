@@ -848,12 +848,20 @@ def send_email_specific(nim):
                 msg.attach(MIMEText(body, 'plain'))
                 msg.attach(MIMEText(html_body, 'html'))
                 
-                server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+                server = smtplib.SMTP(
+                    SMTP_SERVER,
+                    SMTP_PORT,
+                    timeout=15
+                )
+
                 server.starttls()
-                server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-                server.send_message(msg)
-                server.quit()
-                
+                server.login(SMTP_USERNAME, SMTP_PASSWORD)
+
+                try:
+                    server.send_message(msg)
+                finally:
+                      server.quit()
+    
                 flash(f"✅ Email berhasil dikirim ke {mhs.get('nama')} ({email_mhs})", "success")
                 return redirect(url_for("mahasiswa"))
                 
