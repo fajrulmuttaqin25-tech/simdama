@@ -13,7 +13,11 @@ from datetime import datetime
 from functools import wraps
 import requests  
 import time
-import json
+import threading
+
+app = Flask(__name__)
+app.secret_key = "simdama_unpam_2024_secret"
+
 
 # ===================== BREVO API CONFIG =====================
 BREVO_API_KEY = os.getenv("BREVO_API_KEY")
@@ -123,14 +127,18 @@ def send_email_background(mhs, subject, body_template, html_template):
         print(f"❌ Error di background thread: {str(e)}")
 # =======================================================
 
-# Cek apakah semua variabel terisi (untuk debugging)
-if not all([SMTP_USERNAME, SMTP_PASSWORD, EMAIL_SENDER]):
-    print("⚠️  PERINGATAN: SMTP credentials tidak lengkap!")
-    print(f"   SMTP_USERNAME: {'TERISI' if SMTP_USERNAME else 'KOSONG'}")
-    print(f"   SMTP_PASSWORD: {'TERISI' if SMTP_PASSWORD else 'KOSONG'}")
-    print(f"   EMAIL_SENDER: {'TERISI' if EMAIL_SENDER else 'KOSONG'}")
-else:
-    print("✅ SMTP credentials loaded successfully")
+# ===================== BREVO API CONFIG =====================
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+EMAIL_SENDER = os.getenv("EMAIL_SENDER")
+SENDER_NAME = os.getenv("SENDER_NAME", "SIMDAMA UNPAM")
+BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
+
+# Cek API Key
+if not BREVO_API_KEY:
+    print("⚠️  PERINGATAN: BREVO_API_KEY tidak ditemukan!")
+    print("   Tambahkan BREVO_API_KEY di environment variables")
+if not EMAIL_SENDER:
+    print("⚠️  PERINGATAN: EMAIL_SENDER tidak ditemukan!")
 # =======================================================
 
 app = Flask(__name__)
