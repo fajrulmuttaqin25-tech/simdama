@@ -320,7 +320,6 @@ def send_email_specific(nim):
                 flash("❌ Subject dan pesan harus diisi", "error")
                 return render_template("send_email_specific.html", mhs=mhs)
             
-            # HARCODE EMAIL (GA PAKE ENVIRONMENT VARIABLES)
             EMAIL_SENDER = "fajrulmuttaqin25@gmail.com"
             EMAIL_PASSWORD = "scpz qeev ybli hrfc"
             
