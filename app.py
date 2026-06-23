@@ -19,9 +19,14 @@ app = Flask(__name__)
 app.secret_key = "simdama_unpam_2024_secret"
 
 # ===================== BREVO API CONFIG =====================
+# Mengambil dari environment variables
 BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 SENDER_NAME = os.getenv("SENDER_NAME", "SIMDAMA UNPAM")
+BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
+
+print(f"🔑 API Key loaded: {BREVO_API_KEY[:15] if BREVO_API_KEY else 'NOT SET'}...")
+print(f"📧 Email Sender: {EMAIL_SENDER if EMAIL_SENDER else 'NOT SET'}")
 # =======================================================
 
 # Cek API Key
