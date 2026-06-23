@@ -14,6 +14,8 @@ from functools import wraps
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import time  
+import socket  
 
 # ===================== SMTP CONFIG =====================
 SMTP_USERNAME = os.getenv("SMTP_USERNAME")
@@ -21,6 +23,43 @@ SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp-relay.brevo.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
+# =======================================================
+
+# ===================== HELPER FUNCTIONS =====================
+def send_email_with_retry(to_email, subject, body, html_body, max_retries=3, delay=2):
+    """Kirim email dengan retry jika timeout"""
+    last_error = None
+    for attempt in range(max_retries):
+        try:
+            msg = MIMEMultipart('alternative')
+            msg['From'] = f"SIMDAMA UNPAM <{EMAIL_SENDER}>"
+            msg['To'] = to_email
+            msg['Subject'] = subject
+            
+            msg.attach(MIMEText(body, 'plain'))
+            msg.attach(MIMEText(html_body, 'html'))
+            
+            # Koneksi dengan timeout 60 detik
+            server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT, timeout=60)
+            server.starttls()
+            server.login(SMTP_USERNAME, SMTP_PASSWORD)
+            server.send_message(msg)
+            server.quit()
+            
+            return True, "Success"
+            
+        except (smtplib.SMTPServerDisconnected, socket.timeout, TimeoutError) as e:
+            last_error = e
+            print(f"⚠️  Attempt {attempt + 1} failed: {str(e)}")
+            if attempt < max_retries - 1:
+                print(f"🔄 Retrying in {delay} seconds...")
+                time.sleep(delay)
+            else:
+                return False, f"Timeout after {max_retries} attempts: {str(e)}"
+        except Exception as e:
+            return False, str(e)
+    
+    return False, str(last_error)
 # =======================================================
 
 # Cek apakah semua variabel terisi (untuk debugging)
