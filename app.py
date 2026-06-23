@@ -401,5 +401,8 @@ Tim SIMDAMA UNPAM"""
     
     return render_template("send_email_specific.html", mhs=mhs, default_message=default_message)
 
+import os
+
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
