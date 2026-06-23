@@ -673,8 +673,10 @@ def send_email():
                 flash("❌ Subject dan pesan harus diisi", "error")
                 return redirect(url_for("send_email"))
             
+            SMTP_USERNAME = os.getenv("SMTP_USERNAME")
+            SMTP_PASSWORD = os.getenv("EMAIL_PASSWORD")
+            
             EMAIL_SENDER = os.getenv("EMAIL_SENDER")
-            EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
             SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp-relay.brevo.com")
             SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
@@ -746,7 +748,7 @@ def send_email():
                         return redirect(request.url)
                     finally:
                         server.quit()
-                    server.quit()
+                    
                     success_count += 1
                     
                 except Exception as e:
@@ -798,11 +800,7 @@ def send_email_specific(nim):
                 flash("❌ Subject dan pesan harus diisi", "error")
                 return render_template("send_email_specific.html", mhs=mhs)
             
-            EMAIL_SENDER = "fajrulmuttaqin25@gmail.com"
-            EMAIL_PASSWORD = "scpz qeev ybli hrfc"
             
-            SMTP_SERVER = "smtp.gmail.com"
-            SMTP_PORT = 587
             
             email_mhs = mhs.get("email", "").strip()
             
