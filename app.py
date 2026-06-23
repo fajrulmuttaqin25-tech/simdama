@@ -2,11 +2,15 @@
 SIMDAMA - Sistem Informasi Manajemen Data Mahasiswa
 Universitas Pamulang (UNPAM)
 """
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, Response
 from werkzeug.security import generate_password_hash, check_password_hash
-import json, os, re, copy
+import json, os, re, copy, csv
+from io import StringIO
 from datetime import datetime
 from functools import wraps
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 app.secret_key = "simdama_unpam_2024_secret"
@@ -82,7 +86,6 @@ def baca_users():
         "dosen": {"password": generate_password_hash("dosen123"), "role": "Dosen", "nama": "Dosen UNPAM"},
     }
     
-    # Tambahkan mahasiswa dari data_mahasiswa.json
     try:
         if os.path.exists(DATA_FILE):
             with open(DATA_FILE, "r", encoding="utf-8") as f:
@@ -99,7 +102,6 @@ def baca_users():
     except Exception as e:
         print(f"Error loading mahasiswa for login: {e}")
     
-    # Load users.json jika ada
     try:
         if not os.path.exists(USERS_FILE):
             with open(USERS_FILE, "w") as f:
@@ -326,7 +328,6 @@ def tambah():
             })
             simpan_mahasiswa(data)
             
-            # Update users.json agar mahasiswa bisa login
             users = baca_users()
             if nim not in users:
                 users[nim] = {
@@ -374,7 +375,6 @@ def edit(nim):
                     break
             simpan_mahasiswa(all_data)
             
-            # Update users.json jika nama berubah
             users = baca_users()
             if nim in users:
                 users[nim]["nama"] = nama
@@ -401,7 +401,6 @@ def hapus(nim):
     else:
         simpan_mahasiswa(baru)
         
-        # Hapus juga dari users.json
         users = baca_users()
         if nim in users:
             del users[nim]
@@ -572,7 +571,6 @@ def import_mahasiswa():
             
             simpan_mahasiswa(existing_data)
             
-            # Update users.json untuk akun mahasiswa baru
             users = baca_users()
             for mhs in existing_data[-success_count:]:
                 nim = mhs.get('nim')
@@ -603,6 +601,282 @@ def import_mahasiswa():
 @login_required
 def check_status():
     return jsonify({"status": "ok"})
+
+# ==================== ROUTE EKSPOR DATA ====================
+
+@app.route("/ekspor/csv")
+@login_required
+def ekspor_csv():
+    data = baca_mahasiswa()
+    
+    if not data:
+        flash("❌ Tidak ada data untuk diekspor", "error")
+        return redirect(url_for("mahasiswa"))
+    
+    output = StringIO()
+    writer = csv.writer(output)
+    
+    writer.writerow(['NIM', 'Nama', 'Program Studi', 'Semester', 'IPK', 'Email', 'No HP', 'Tanggal Daftar'])
+    
+    for m in data:
+        writer.writerow([
+            m.get('nim', ''),
+            m.get('nama', ''),
+            m.get('prodi', ''),
+            m.get('semester', ''),
+            m.get('ipk', ''),
+            m.get('email', ''),
+            m.get('no_hp', ''),
+            m.get('tgl_daftar', '')
+        ])
+    
+    output.seek(0)
+    
+    return Response(
+        output.getvalue(),
+        mimetype='text/csv',
+        headers={'Content-Disposition': f'attachment; filename=Data_Mahasiswa_{datetime.now().strftime("%Y%m%d")}.csv'}
+    )
+
+@app.route("/ekspor/json")
+@login_required
+def ekspor_json():
+    data = baca_mahasiswa()
+    
+    if not data:
+        flash("❌ Tidak ada data untuk diekspor", "error")
+        return redirect(url_for("mahasiswa"))
+    
+    return Response(
+        json.dumps(data, indent=2, ensure_ascii=False),
+        mimetype='application/json',
+        headers={'Content-Disposition': f'attachment; filename=Data_Mahasiswa_{datetime.now().strftime("%Y%m%d")}.json'}
+    )
+
+# ==================== ROUTE KIRIM EMAIL (SEMUA MAHASISWA) ====================
+
+@app.route("/send-email", methods=["GET", "POST"])
+@login_required
+def send_email():
+    data = baca_mahasiswa()
+    
+    if session.get("role") not in ["Admin", "Dosen"]:
+        flash("❌ Hanya Admin dan Dosen yang dapat mengirim email", "error")
+        return redirect(url_for("dashboard"))
+    
+    if request.method == "POST":
+        try:
+            subject = request.form.get("subject", "").strip()
+            message_template = request.form.get("message", "").strip()
+            
+            if not subject or not message_template:
+                flash("❌ Subject dan pesan harus diisi", "error")
+                return redirect(url_for("send_email"))
+            
+            EMAIL_SENDER = "fajrulmuttaqin25@gmail.com"
+            EMAIL_PASSWORD = "scpz qeev ybli hrfc"
+            
+            SMTP_SERVER = "smtp.gmail.com"
+            SMTP_PORT = 587
+            
+            success_count = 0
+            fail_count = 0
+            error_log = []
+            
+            for mhs in data:
+                email_mhs = mhs.get("email", "").strip()
+                if not email_mhs:
+                    fail_count += 1
+                    error_log.append(f"{mhs.get('nama')} - Email kosong")
+                    continue
+                
+                try:
+                    # Ganti placeholder
+                    body = message_template
+                    body = body.replace("[NAMA]", mhs.get("nama", ""))
+                    body = body.replace("[NIM]", mhs.get("nim", ""))
+                    body = body.replace("[PRODI]", mhs.get("prodi", ""))
+                    body = body.replace("[SEMESTER]", str(mhs.get("semester", "")))
+                    body = body.replace("[IPK]", str(mhs.get("ipk", "")))
+                    
+                    # HTML Version
+                    html_body = f"""
+                    <html>
+                    <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+                        <p>Yth. {mhs.get('nama', '')},</p>
+                        <p>Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.</p>
+                        <p><b>Berikut data Anda:</b></p>
+                        <ul>
+                            <li><b>NIM:</b> {mhs.get('nim', '')}</li>
+                            <li><b>Program Studi:</b> {mhs.get('prodi', '')}</li>
+                            <li><b>Semester:</b> {mhs.get('semester', '')}</li>
+                            <li><b>IPK:</b> {mhs.get('ipk', '')}</li>
+                        </ul>
+                        <p>Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:</p>
+                        <p><b>Username:</b> {mhs.get('nim', '')}<br>
+                        <b>Password:</b> {mhs.get('nim', '')}123</p>
+                        <p>Terima kasih atas perhatiannya.</p>
+                        <p>Salam,<br>
+                        <b>Tim SIMDAMA UNPAM</b></p>
+                        <hr>
+                        <small style="color: #888;">Email ini dikirim secara otomatis oleh sistem SIMDAMA UNPAM.</small>
+                    </body>
+                    </html>
+                    """
+                    
+                    msg = MIMEMultipart('alternative')
+                    msg['From'] = f"SIMDAMA UNPAM <{EMAIL_SENDER}>"
+                    msg['To'] = email_mhs
+                    msg['Subject'] = f"{subject} - {mhs.get('nama')}"
+                    
+                    msg.attach(MIMEText(body, 'plain'))
+                    msg.attach(MIMEText(html_body, 'html'))
+                    
+                    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+                    server.starttls()
+                    server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+                    server.send_message(msg)
+                    server.quit()
+                    
+                    success_count += 1
+                    
+                except Exception as e:
+                    fail_count += 1
+                    error_log.append(f"{mhs.get('nama')} - {str(e)[:50]}")
+            
+            if success_count > 0:
+                flash(f"✅ Berhasil mengirim ke {success_count} mahasiswa", "success")
+            if fail_count > 0:
+                flash(f"❌ Gagal mengirim ke {fail_count} mahasiswa", "error")
+                if error_log:
+                    flash(f"Detail: {', '.join(error_log[:3])}", "error")
+            
+            return redirect(url_for("send_email"))
+            
+        except Exception as e:
+            flash(f"❌ Error: {str(e)}", "error")
+            return redirect(url_for("send_email"))
+    
+    return render_template("send_email.html", data=data, total=len(data))
+
+# ==================== ROUTE KIRIM EMAIL PER MAHASISWA (FIX SPAM) ====================
+
+@app.route("/send-email/<nim>", methods=["GET", "POST"])
+@login_required
+def send_email_specific(nim):
+    nim = nim.strip()
+    all_data = baca_mahasiswa()
+    mhs = next((m for m in all_data if str(m["nim"]).strip() == nim), None)
+    
+    if not mhs:
+        flash("❌ Mahasiswa tidak ditemukan.", "error")
+        return redirect(url_for("mahasiswa"))
+    
+    if session.get("role") not in ["Admin", "Dosen"]:
+        flash("❌ Hanya Admin dan Dosen yang dapat mengirim email", "error")
+        return redirect(url_for("dashboard"))
+    
+    if not mhs.get("email") or mhs.get("email") == "":
+        flash(f"❌ Mahasiswa {mhs.get('nama')} tidak memiliki email!", "error")
+        return redirect(url_for("mahasiswa"))
+    
+    if request.method == "POST":
+        try:
+            subject = request.form.get("subject", "").strip()
+            message_template = request.form.get("message", "").strip()
+            
+            if not subject or not message_template:
+                flash("❌ Subject dan pesan harus diisi", "error")
+                return render_template("send_email_specific.html", mhs=mhs)
+            
+            EMAIL_SENDER = "fajrulmuttaqin25@gmail.com"
+            EMAIL_PASSWORD = "scpz qeev ybli hrfc"
+            
+            SMTP_SERVER = "smtp.gmail.com"
+            SMTP_PORT = 587
+            
+            email_mhs = mhs.get("email", "").strip()
+            
+            # Ganti placeholder
+            body = message_template
+            body = body.replace("[NAMA]", mhs.get("nama", ""))
+            body = body.replace("[NIM]", mhs.get("nim", ""))
+            body = body.replace("[PRODI]", mhs.get("prodi", ""))
+            body = body.replace("[SEMESTER]", str(mhs.get("semester", "")))
+            body = body.replace("[IPK]", str(mhs.get("ipk", "")))
+            
+            # HTML Version
+            html_body = f"""
+            <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <p>Yth. {mhs.get('nama', '')},</p>
+                <p>Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.</p>
+                <p><b>Berikut data Anda:</b></p>
+                <ul>
+                    <li><b>NIM:</b> {mhs.get('nim', '')}</li>
+                    <li><b>Program Studi:</b> {mhs.get('prodi', '')}</li>
+                    <li><b>Semester:</b> {mhs.get('semester', '')}</li>
+                    <li><b>IPK:</b> {mhs.get('ipk', '')}</li>
+                </ul>
+                <p>Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:</p>
+                <p><b>Username:</b> {mhs.get('nim', '')}<br>
+                <b>Password:</b> {mhs.get('nim', '')}123</p>
+                <p>Terima kasih atas perhatiannya.</p>
+                <p>Salam,<br>
+                <b>Tim SIMDAMA UNPAM</b></p>
+                <hr>
+                <small style="color: #888;">Email ini dikirim secara otomatis oleh sistem SIMDAMA UNPAM.</small>
+            </body>
+            </html>
+            """
+            
+            try:
+                msg = MIMEMultipart('alternative')
+                msg['From'] = f"SIMDAMA UNPAM <{EMAIL_SENDER}>"
+                msg['To'] = email_mhs
+                msg['Subject'] = f"{subject} - {mhs.get('nama')}"
+                
+                msg.attach(MIMEText(body, 'plain'))
+                msg.attach(MIMEText(html_body, 'html'))
+                
+                server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+                server.starttls()
+                server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+                server.send_message(msg)
+                server.quit()
+                
+                flash(f"✅ Email berhasil dikirim ke {mhs.get('nama')} ({email_mhs})", "success")
+                return redirect(url_for("mahasiswa"))
+                
+            except Exception as e:
+                flash(f"❌ Gagal mengirim email ke {mhs.get('nama')}: {str(e)}", "error")
+                return render_template("send_email_specific.html", mhs=mhs)
+            
+        except Exception as e:
+            flash(f"❌ Error: {str(e)}", "error")
+            return render_template("send_email_specific.html", mhs=mhs)
+    
+    # Buat pesan default
+    default_message = f"""Yth. {mhs.get('nama', '')},
+
+Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.
+
+Berikut data Anda:
+• NIM: {mhs.get('nim', '')}
+• Program Studi: {mhs.get('prodi', '')}
+• Semester: {mhs.get('semester', '')}
+• IPK: {mhs.get('ipk', '')}
+
+Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:
+Username: {mhs.get('nim', '')}
+Password: {mhs.get('nim', '')}123
+
+Terima kasih atas perhatiannya.
+
+Salam,
+Tim SIMDAMA UNPAM"""
+    
+    return render_template("send_email_specific.html", mhs=mhs, default_message=default_message)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

@@ -148,6 +148,7 @@ tbody td{padding:12px 16px;color:var(--text);vertical-align:middle}
     <a href="{{ url_for('mahasiswa') }}" class="{{ 'active' if request.endpoint in ['mahasiswa','tambah','edit'] }}"><i class="fas fa-users"></i><span>Data Mahasiswa</span></a>
     <a href="{{ url_for('tambah') }}" class="{{ 'active' if request.endpoint=='tambah' }}"><i class="fas fa-user-plus"></i><span>Tambah Mahasiswa</span></a>
     <a href="{{ url_for('import_mahasiswa') }}" class="{{ 'active' if request.endpoint=='import_mahasiswa' }}"><i class="fas fa-file-import"></i><span>Import Data</span></a>
+    <a href="{{ url_for('send_email') }}" class="{{ 'active' if request.endpoint=='send_email' }}"><i class="fas fa-envelope"></i><span>Kirim Email</span></a>
     
     <div class="nav-section">Fitur Akademik</div>
     <a href="{{ url_for('cari') }}" class="{{ 'active' if request.endpoint=='cari' }}"><i class="fas fa-search"></i><span>Pencarian</span></a>

@@ -8,5 +8,160 @@
     "password": "scrypt:32768:8:1$F149V7gchUQCdNtL$d3a9e98e7a31cbaefa351897c3b8e6c92550e6f64b65fe8b932b2d14d13f3d06a7057377711d785870eeeaf865091aa706773e594252b371ab56745c2ec8a24f",
     "role": "Dosen",
     "nama": "Dosen UNPAM"
+  },
+  "241011450351": {
+    "password": "scrypt:32768:8:1$LM6TULIqIV4Wn6Nk$dff4fa7477fed9d8434b527fa2909e0c02632cdbd4b65312e326d69890e36625ebf631cb75234239525633139d0885ec1455785672831fe13f53473e65c48020",
+    "role": "Mahasiswa",
+    "nama": "Aditya Saputra"
+  },
+  "241011450289": {
+    "password": "scrypt:32768:8:1$MRSvffgcAMC3i59F$dc97c675306cd7508204f752017819d69feed6af3f2a3fefdd5f6a07712a92b084ac57873fec12a2db827e096d86e5109e8eca6b39d89680bb104faef198b81d",
+    "role": "Mahasiswa",
+    "nama": "Ahmad Nuur Fauzy"
+  },
+  "241011450388": {
+    "password": "scrypt:32768:8:1$BSLHV4LwHJkxIecu$0b7f9d7c91e71031e55da3826b8395afedbbfe83dccbaccd2fd35138d810dd0636de5f814aa7ef22f17eef99e056b1d207898d2306072b74b65189b37b5bcfc7",
+    "role": "Mahasiswa",
+    "nama": "Ardhya Krisna Anand Dipta"
+  },
+  "241011450385": {
+    "password": "scrypt:32768:8:1$0RwnTvEDrKSdly9U$7fe8df809480b6e1881ce1868410eca053f20442cd824f4a6a186b6a0e8fa37964786150671a04a75fbfdf7534c45126e6483a0fa0747922e4130253fc96a610",
+    "role": "Mahasiswa",
+    "nama": "Biondi Javallino Syauqi"
+  },
+  "241011450109": {
+    "password": "scrypt:32768:8:1$Vgs3xlNGzy0dwlAA$137031a29c2c554eb9902652d77b02f863bf26f45910fe04d40cb4fb62446f92f65530a9157cdf35d17739d37ff0f3f342856483157ae4bea781f97a75e5f117",
+    "role": "Mahasiswa",
+    "nama": "Daffa Aryl Musyaffa"
+  },
+  "241011450251": {
+    "password": "scrypt:32768:8:1$aQYmXyK4hRBQYUpZ$cc8f3baf613490eada7de2902e31b7d94bdaadebd76ccd76c4615548ec2072c4b83f4b2934b902be3a94fae527db0b42db48c5723218c5fb5e68bc510154a355",
+    "role": "Mahasiswa",
+    "nama": "Dhika Miftahul Kautsar"
+  },
+  "241011450284": {
+    "password": "scrypt:32768:8:1$fqakEZVk0TgTul1t$174dfe866b48258e5d9d35de038774a159f66fa8ec38ef18d9ef668a45131194fa0b59ae2015f59f4655a403b4f5cdf9479ad1d468a48affc735bd81b6011de0",
+    "role": "Mahasiswa",
+    "nama": "Dhimas Surya Prakasa"
+  },
+  "241011450479": {
+    "password": "scrypt:32768:8:1$Tyjr8dSCz6g8FQjd$f120f3d99b8553cf2b744b67d365501eb849b673c5897c2ea1bb440c98c82998a01d6cd9a08b4af302a2e49fc6bb57567c8cd4f807307f15d971e91a73b6cd9e",
+    "role": "Mahasiswa",
+    "nama": "Epifani Buranna"
+  },
+  "241011450638": {
+    "password": "scrypt:32768:8:1$kVOsLjgokqdlvbW2$f13186ef0fba579d9147b21fcbcdc132b44234d782dca8870a24ac65a689eb985ee92300efdea1a001d9ecdf34df2f23418eed9ec1e8c2966b83f540affeaa41",
+    "role": "Mahasiswa",
+    "nama": "Erhanif Fadillah"
+  },
+  "241011450512": {
+    "password": "scrypt:32768:8:1$hJLjcwtpL6NNEUvp$fdc907295da20676f5718939fc0f5c784727cfd48d4c2e1a94fb9ab574871b1c952e5d8ea0d1e1a86499b762e965c25051280c41e370603f5dc00c26e3649a1c",
+    "role": "Mahasiswa",
+    "nama": "Fikri Restu Alam"
+  },
+  "241011450286": {
+    "password": "scrypt:32768:8:1$9ZBfLaBmE2bEcn66$97b6260f196377ff63a8d2c08f7dbd0b7d2f02d9a6ba775a5b692f0d5eef07b141a18064237fe6a8694ecd2f00d261c78fcd921f94d8ba331a773450408a5888",
+    "role": "Mahasiswa",
+    "nama": "Julian Dwi Wahyudi"
+  },
+  "241011450118": {
+    "password": "scrypt:32768:8:1$U2d2cttGbKMRJE5a$c4972d67b4c89e02a1cd625d13d23dc5f59f838f27a2c6ed5e3dd4cc4c1f14c0fd820384eb39f52b04da5dff94ed9e7b7768f011cb0f68f057a5122e53f783c8",
+    "role": "Mahasiswa",
+    "nama": "Kevin Januar"
+  },
+  "241011450089": {
+    "password": "scrypt:32768:8:1$6AUL5qz6GTf5P6iT$dd16a253c4d4ab9c57e3d6930dcbdcc1576b86513737d7f8aca9bd26cbb21503f16ccf218cd8b01e46d4ad053da966e1306135ee0b63d8af028e724affb912a6",
+    "role": "Mahasiswa",
+    "nama": "Muamarkeysa Islamay Pasha"
+  },
+  "241011450097": {
+    "password": "scrypt:32768:8:1$ubtE2ASTtB2DXXng$e09a413f69cce1ea176c65e30a38efb9d5b3a9f5373c13a6829cda175dc7d22da8679a4512255f0f8b4f37664efc920177c1ae139cf00a968e7860949b8f57cf",
+    "role": "Mahasiswa",
+    "nama": "Muhamad Akbar Febriyanto"
+  },
+  "241011450093": {
+    "password": "scrypt:32768:8:1$GZ125hI0juPSMaMi$deb252c1ccc0edac52f47d82c10fc42706c2352283a5dd9e3cc9232834c906679b70fc9d6951e32232eff39dd31740d8b9af844ee8cd5ed67aef357b549397ef",
+    "role": "Mahasiswa",
+    "nama": "Muhammad Albar Al Hakim"
+  },
+  "241011450396": {
+    "password": "scrypt:32768:8:1$F0iXQbFWvoYgyeiA$92ad80db3e30727fbabc25d66c9c65f90f0da1d8591d11376995c40131e6572b3730b5ee6ec863ea7c9a968bd76316c0dbdb0705e355db9ea88717622c2c7735",
+    "role": "Mahasiswa",
+    "nama": "Muhamad Fajrul Muttaqin"
+  },
+  "241011450471": {
+    "password": "scrypt:32768:8:1$PqvMx2RxeZP53K9d$9d1b6cb6ac3b5b7410cb22f9c2c4c843c2dcfc65b6abf543139ec7d38231c95deb87ceded54e7863d4276ddc16b1f213e288882dd010c59fb4a404dde4fd1cd2",
+    "role": "Mahasiswa",
+    "nama": "Nabil Maulida"
+  },
+  "241011450438": {
+    "password": "scrypt:32768:8:1$GduxduppNaUagI2C$15158d76eb3ab28cda11e4aedf57c19b25c8bda5bf8d6203c60f3d73efab92d258138f6c0b69079e7349934491c08400075e4bdd9dec12c63c309472e51148e8",
+    "role": "Mahasiswa",
+    "nama": "Nuzulia Fahita Ramadani"
+  },
+  "241011450410": {
+    "password": "scrypt:32768:8:1$7msPoTwBqhDU8Kq1$539de1add2b31a0a5dc365ada41d37160da1a4d9e4f73f552c5f9251fd16762315c8afda58974bbdf877b02d5d901305a28a7d3d1ffda6dfa9fffd360d28dac7",
+    "role": "Mahasiswa",
+    "nama": "Raihan Zaky"
+  },
+  "241011450090": {
+    "password": "scrypt:32768:8:1$Atz9h3q9UrUhIpmz$0834d8e30fce52f1e9ba9507d3f1b8dbcae031c3e778d02492e0458056ccd2b8a8ef457c75a8b775d52684853a54a39fa16397ceb6fb38e22be9533ac3112fb5",
+    "role": "Mahasiswa",
+    "nama": "Raina Anatu Qalbii"
+  },
+  "241011450326": {
+    "password": "scrypt:32768:8:1$2KydARSHcQUcbbez$b5190e7f0fa7299366995b9de3991dca8efbf7cb4d26fbf62c11f70d3163a595eb8f91ce21780ecd10eb535175ef34f234b1e515525293cf4e4a49061fb0e4b2",
+    "role": "Mahasiswa",
+    "nama": "Rashiqa Salma Nurendra Putri"
+  },
+  "241011450584": {
+    "password": "scrypt:32768:8:1$mkS6Tcx8cXSUfHYa$83a7095f05590f366087541d5624935013b4c2ba45dc5c7343323d7a63723cfc2abe91410c13f2f59f052a2df069d907f15356b21d3d5a0debc42b46c722fed1",
+    "role": "Mahasiswa",
+    "nama": "Renovis Iman Saro Mendrofa"
+  },
+  "241011450102": {
+    "password": "scrypt:32768:8:1$KBuKvw64ud0O0Fvf$5cd4360a1c3da61f94e5bf9a87ad572dffbf70e6886ce1f2b1061e5d5237b2babadbb093ef131968c395ecdd643f2497cdb2542724c672ee01c385203ca8035e",
+    "role": "Mahasiswa",
+    "nama": "Rifqi Atha Ramadhan"
+  },
+  "241011402193": {
+    "password": "scrypt:32768:8:1$RGKFx8t7U7HdefFM$f063536e45d3f4eeb1f866b02cca14eeb42b9fb4b615a223a177988854230e7438f5c7406025c8b16d1c854ef2c0a33ce3ced45c13eb3c1cee8196c63345807e",
+    "role": "Mahasiswa",
+    "nama": "Rivan Manshurin"
+  },
+  "241011450222": {
+    "password": "scrypt:32768:8:1$YcNSgD3lQ0HnNOEt$4bfb9b1000bb2f7eae5954642ef065ec4ab5f00d2fb9263545f227e6bf88933a8597f315dcee29e156eefee24a48abe576faa391b4dc67c5682cee18d324892a",
+    "role": "Mahasiswa",
+    "nama": "Sahroni"
+  },
+  "241011450369": {
+    "password": "scrypt:32768:8:1$w0eCNE45h4QvA1pu$ceba9e2f79605dd635020069388a8319d8ea2d5522d97202af5adf4788f7c87edaea7c9b1e1908fcce95813b4d09e3de010c89ba383d201a36dfc6a9da7a3b58",
+    "role": "Mahasiswa",
+    "nama": "Samudra Abdillah"
+  },
+  "241011450391": {
+    "password": "scrypt:32768:8:1$Jya56RRV2CMJrcWu$cea0f9ec3d1a94fe389b856a1f33206dc631d00f4e7821f8dcaaf642342f626e5b72d4b861cff4766bb27592bbb55bc5099aa07823879a1c0e915d2eaec7545f",
+    "role": "Mahasiswa",
+    "nama": "Satria Erlangga"
+  },
+  "241011450258": {
+    "password": "scrypt:32768:8:1$3LwkUxasylN4zD29$146889b5be797bd83f7c7547ef7f1c8fef3161d34783fe876d0f154de93d20ccd98b507e7505675db468ed3df42b6612bdb82e8b14852657444e29fdfbd96310",
+    "role": "Mahasiswa",
+    "nama": "Septian Adam"
+  },
+  "241011450121": {
+    "password": "scrypt:32768:8:1$QQcoehjfVCQ2h8GE$60e21e013b519d848316ac9b9f6811d2528731343007c71c7ce4d3f77f17326c83b53ccee819e5a7ae9535baa6ce7f590887c50ecd9fea7e10224735392d04c1",
+    "role": "Mahasiswa",
+    "nama": "Siti Nur Haliza"
+  },
+  "241011450456": {
+    "password": "scrypt:32768:8:1$Tzey6gUqz1RLIRmq$a244c77db5dca92dc6bcc8f17663fe8f493aebac4e146cc2f06ec0fd44b9b1025b56751e7944e836087c99f14d217304e68d909e98d9113da87168c10f030b0e",
+    "role": "Mahasiswa",
+    "nama": "Sutan Salsabila"
+  },
+  "241011450306": {
+    "password": "scrypt:32768:8:1$Ru18nbeEYOZdIOVs$de54a70730ea7d369cc8559e737c6c47d51f02b0540779f39184e4b7d1cce11604998680eb4347aa5ff3f70da18eadf6d7df448bebc7c68bf417dfe8e8be9a69",
+    "role": "Mahasiswa",
+    "nama": "Zidan Achilla Muhammad Azka"
   }
 }

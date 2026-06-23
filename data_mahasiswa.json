@@ -1,25 +1,5 @@
 [
   {
-    "nim": "221218921902",
-    "nama": "Ilyasyach Raihan Resfiana",
-    "prodi": "Teknik Elektro",
-    "semester": 6,
-    "ipk": 3.6,
-    "email": "Ilyass2@gmail.com",
-    "no_hp": "082145161714",
-    "tgl_daftar": "10-06-2026 08:36"
-  },
-  {
-    "nim": "231012299021",
-    "nama": "Ahmad Darul Qutni",
-    "prodi": "Pendidikan Bahasa Inggris",
-    "semester": 6,
-    "ipk": 3.78,
-    "email": "darull1@gmail.com",
-    "no_hp": "082163783787",
-    "tgl_daftar": "10-06-2026 08:46"
-  },
-  {
     "nim": "241011450351",
     "nama": "Aditya Saputra",
     "prodi": "Teknik Informatika",
@@ -275,7 +255,7 @@
     "prodi": "Teknik Informatika",
     "semester": 3,
     "ipk": 3.7,
-    "email": "samudra@email.com",
+    "email": "samudraabdillah13@gmail.com",
     "no_hp": "081234567825",
     "tgl_daftar": "13-06-2026 21:25"
   },
@@ -285,7 +265,7 @@
     "prodi": "Teknik Informatika",
     "semester": 3,
     "ipk": 3.65,
-    "email": "satria.erlangga@email.com",
+    "email": "esatria034@gmail.com",
     "no_hp": "081234567826",
     "tgl_daftar": "13-06-2026 21:25"
   },

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block page_title %}Kirim Email ke {{ mhs.nama }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2><i class="fas fa-envelope me-2" style="color:var(--gold)"></i>Kirim Email ke {{ mhs.nama }}</h2>
+                    <span class="badge bg-primary text-white">{{ mhs.nim }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Pesan otomatis!</strong> Email sudah disesuaikan dengan data <b>{{ mhs.nama }}</b>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Data Mahasiswa:</strong><br>
+                        <b>Nama:</b> {{ mhs.nama }}<br>
+                        <b>NIM:</b> {{ mhs.nim }}<br>
+                        <b>Email:</b> {{ mhs.email }}<br>
+                        <b>Prodi:</b> {{ mhs.prodi }}<br>
+                        <b>Semester:</b> {{ mhs.semester }}<br>
+                        <b>IPK:</b> {{ "%.2f"|format(mhs.ipk|float) }}
+                    </div>
+
+                    <form method="POST">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-tag me-1"></i>Subject Email</label>
+                            <input type="text" class="form-control" name="subject" 
+                                   value="Informasi Akademik - SIMDAMA UNPAM" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-pencil-alt me-1"></i>Isi Pesan</label>
+                            <textarea class="form-control" name="message" rows="12" required>{{ default_message }}</textarea>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Pesan sudah otomatis terisi dengan data {{ mhs.nama }}. Kamu bisa edit jika perlu.
+                            </small>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-paper-plane me-2"></i>Kirim Email ke {{ mhs.nama }}
+                            </button>
+                            <a href="{{ url_for('mahasiswa') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Kembali
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

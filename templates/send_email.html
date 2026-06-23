@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block page_title %}Kirim Email Massal{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2><i class="fas fa-envelope me-2" style="color:var(--gold)"></i>Kirim Email ke Semua Mahasiswa</h2>
+                    <span class="badge bg-primary text-white">{{ total }} Mahasiswa</span>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Penting:</strong> Email akan dikirim ke SEMUA mahasiswa yang terdaftar.
+                    </div>
+
+                    <form method="POST">
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-tag me-1"></i>Subject Email</label>
+                            <input type="text" class="form-control" name="subject" 
+                                   value="Informasi Akademik - SIMDAMA UNPAM" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label"><i class="fas fa-pencil-alt me-1"></i>Isi Pesan</label>
+                            <textarea class="form-control" name="message" rows="10" required>
+Yth. [NAMA],
+
+Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.
+
+Berikut data Anda:
+• NIM: [NIM]
+• Program Studi: [PRODI]
+• Semester: [SEMESTER]
+• IPK: [IPK]
+
+Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:
+Username: [NIM]
+Password: [NIM]123
+
+Terima kasih atas perhatiannya.
+
+Salam,
+Tim SIMDAMA UNPAM
+                            </textarea>
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Gunakan placeholder: [NAMA], [NIM], [PRODI], [SEMESTER], [IPK]
+                            </small>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Kirim Email ke Semua Mahasiswa
+                        </button>
+                    </form>
+
+                    <div class="mt-3">
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Kembali ke Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
