@@ -1,61 +1,97 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirim Email - SIMDAMA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('dashboard') }}">
+                <i class="bi bi-mortarboard"></i> SIMDAMA
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3">
+                    <i class="bi bi-person-circle"></i> {{ session.nama }}
+                </span>
+                <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
 
-{% block page_title %}Kirim Email ke {{ mhs.nama }}{% endblock %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('mahasiswa') }}">Data Mahasiswa</a></li>
+                        <li class="breadcrumb-item active">Kirim Email ke {{ mhs.nama }}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
 
-{% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h2><i class="fas fa-envelope me-2" style="color:var(--gold)"></i>Kirim Email ke {{ mhs.nama }}</h2>
-                    <span class="badge bg-primary text-white">{{ mhs.nim }}</span>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-success">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <strong>Pesan otomatis!</strong> Email sudah disesuaikan dengan data <b>{{ mhs.nama }}</b>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-envelope"></i> Kirim Email ke {{ mhs.nama }}</h5>
                     </div>
+                    <div class="card-body">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                                        {{ message|safe }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
 
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Data Mahasiswa:</strong><br>
-                        <b>Nama:</b> {{ mhs.nama }}<br>
-                        <b>NIM:</b> {{ mhs.nim }}<br>
-                        <b>Email:</b> {{ mhs.email }}<br>
-                        <b>Prodi:</b> {{ mhs.prodi }}<br>
-                        <b>Semester:</b> {{ mhs.semester }}<br>
-                        <b>IPK:</b> {{ "%.2f"|format(mhs.ipk|float) }}
-                    </div>
-
-                    <form method="POST">
-                        <div class="form-group">
-                            <label class="form-label"><i class="fas fa-tag me-1"></i>Subject Email</label>
-                            <input type="text" class="form-control" name="subject" 
-                                   value="Informasi Akademik - SIMDAMA UNPAM" required>
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Email:</strong> {{ mhs.email }}
+                            <br>
+                            <span class="placeholder-hint">
+                                <i class="bi bi-tag"></i> Gunakan placeholder: <code>[NAMA]</code>, <code>[NIM]</code>, <code>[PRODI]</code>, <code>[SEMESTER]</code>, <code>[IPK]</code>
+                            </span>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label"><i class="fas fa-pencil-alt me-1"></i>Isi Pesan</label>
-                            <textarea class="form-control" name="message" rows="12" required>{{ default_message }}</textarea>
-                            <small class="text-muted">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Pesan sudah otomatis terisi dengan data {{ mhs.nama }}. Kamu bisa edit jika perlu.
-                            </small>
-                        </div>
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="subject" class="form-label">Subject Email</label>
+                                <input type="text" class="form-control" id="subject" name="subject" 
+                                       placeholder="Contoh: Informasi Akademik" required>
+                            </div>
 
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-paper-plane me-2"></i>Kirim Email ke {{ mhs.nama }}
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Pesan Email</label>
+                                <textarea class="form-control" id="message" name="message" rows="10" required>{{ default_message }}</textarea>
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle"></i> Gunakan placeholder untuk personalisasi
+                                </small>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send"></i> Kirim Email ke {{ mhs.nama }}
                             </button>
                             <a href="{{ url_for('mahasiswa') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>Kembali
+                                <i class="bi bi-arrow-left"></i> Kembali
                             </a>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

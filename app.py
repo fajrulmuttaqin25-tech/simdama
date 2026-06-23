@@ -2,6 +2,9 @@
 SIMDAMA - Sistem Informasi Manajemen Data Mahasiswa
 Universitas Pamulang (UNPAM)
 """
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 import json, os, re, copy, csv
@@ -14,12 +17,20 @@ from email.mime.multipart import MIMEMultipart
 
 # ===================== SMTP CONFIG =====================
 SMTP_USERNAME = os.getenv("SMTP_USERNAME")
-SMTP_PASSWORD = os.getenv("EMAIL_PASSWORD")
-
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
-
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp-relay.brevo.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
+# =======================================================
+
+# Cek apakah semua variabel terisi (untuk debugging)
+if not all([SMTP_USERNAME, SMTP_PASSWORD, EMAIL_SENDER]):
+    print("⚠️  PERINGATAN: SMTP credentials tidak lengkap!")
+    print(f"   SMTP_USERNAME: {'TERISI' if SMTP_USERNAME else 'KOSONG'}")
+    print(f"   SMTP_PASSWORD: {'TERISI' if SMTP_PASSWORD else 'KOSONG'}")
+    print(f"   EMAIL_SENDER: {'TERISI' if EMAIL_SENDER else 'KOSONG'}")
+else:
+    print("✅ SMTP credentials loaded successfully")
 # =======================================================
 
 app = Flask(__name__)
