@@ -3,7 +3,7 @@ SIMDAMA - Sistem Informasi Manajemen Data Mahasiswa
 Universitas Pamulang (UNPAM)
 """
 from dotenv import load_dotenv
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, Response
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,14 +11,13 @@ import json, os, re, copy, csv
 from io import StringIO
 from datetime import datetime
 from functools import wraps
-import requests  
+import requests
 import time
 import threading
 
 app = Flask(__name__)
 app.secret_key = "simdama_unpam_2024_secret"
 
-
 # ===================== BREVO API CONFIG =====================
 BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 EMAIL_SENDER = os.getenv("EMAIL_SENDER")
@@ -32,117 +31,6 @@ if not BREVO_API_KEY:
 if not EMAIL_SENDER:
     print("⚠️  PERINGATAN: EMAIL_SENDER tidak ditemukan!")
 # =======================================================
-
-# ===================== HELPER FUNCTIONS =====================
-def send_email_via_brevo(to_email, subject, body, html_body, max_retries=3, delay=2):
-    """Kirim email via Brevo API dengan retry"""
-    
-    url = "https://api.brevo.com/v3/smtp/email"
-    
-    headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "api-key": BREVO_API_KEY
-    }
-    
-    payload = {
-        "sender": {
-            "name": SENDER_NAME,
-            "email": EMAIL_SENDER
-        },
-        "to": [
-            {
-                "email": to_email
-            }
-        ],
-        "subject": subject,
-        "htmlContent": html_body,
-        "textContent": body
-    }
-    
-    last_error = None
-    for attempt in range(max_retries):
-        try:
-            response = requests.post(url, json=payload, headers=headers, timeout=30)
-            
-            if response.status_code == 201:
-                return True, "Success"
-            else:
-                error_data = response.json()
-                error_msg = error_data.get('message', 'Unknown error')
-                return False, f"API Error {response.status_code}: {error_msg}"
-                
-        except requests.exceptions.Timeout as e:
-            last_error = e
-            print(f"⚠️  Attempt {attempt + 1} timeout: {str(e)}")
-            if attempt < max_retries - 1:
-                print(f"🔄 Retrying in {delay} seconds...")
-                time.sleep(delay)
-        except requests.exceptions.ConnectionError as e:
-            last_error = e
-            print(f"⚠️  Attempt {attempt + 1} connection error: {str(e)}")
-            if attempt < max_retries - 1:
-                print(f"🔄 Retrying in {delay} seconds...")
-                time.sleep(delay)
-        except Exception as e:
-            return False, str(e)
-    
-    return False, str(last_error)
-
-
-def send_email_background(mhs, subject, body_template, html_template):
-    """Kirim email di background thread via Brevo API"""
-    try:
-        # Ganti placeholder
-        body = body_template
-        body = body.replace("[NAMA]", mhs.get("nama", ""))
-        body = body.replace("[NIM]", mhs.get("nim", ""))
-        body = body.replace("[PRODI]", mhs.get("prodi", ""))
-        body = body.replace("[SEMESTER]", str(mhs.get("semester", "")))
-        body = body.replace("[IPK]", str(mhs.get("ipk", "")))
-        
-        # HTML Version
-        html_body = html_template
-        html_body = html_body.replace("[NAMA]", mhs.get("nama", ""))
-        html_body = html_body.replace("[NIM]", mhs.get("nim", ""))
-        html_body = html_body.replace("[PRODI]", mhs.get("prodi", ""))
-        html_body = html_body.replace("[SEMESTER]", str(mhs.get("semester", "")))
-        html_body = html_body.replace("[IPK]", str(mhs.get("ipk", "")))
-        
-        email_subject = f"{subject} - {mhs.get('nama')}"
-        
-        success, msg = send_email_via_brevo(
-            mhs.get("email"), 
-            email_subject, 
-            body, 
-            html_body
-        )
-        
-        if success:
-            print(f"✅ Email terkirim ke {mhs.get('nama')} ({mhs.get('email')})")
-        else:
-            print(f"❌ Gagal kirim ke {mhs.get('nama')}: {msg}")
-            
-    except Exception as e:
-        print(f"❌ Error di background thread: {str(e)}")
-# =======================================================
-
-# ===================== BREVO API CONFIG =====================
-BREVO_API_KEY = os.getenv("BREVO_API_KEY")
-EMAIL_SENDER = os.getenv("EMAIL_SENDER")
-SENDER_NAME = os.getenv("SENDER_NAME", "SIMDAMA UNPAM")
-BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
-
-# Cek API Key
-if not BREVO_API_KEY:
-    print("⚠️  PERINGATAN: BREVO_API_KEY tidak ditemukan!")
-    print("   Tambahkan BREVO_API_KEY di environment variables")
-if not EMAIL_SENDER:
-    print("⚠️  PERINGATAN: EMAIL_SENDER tidak ditemukan!")
-# =======================================================
-
-app = Flask(__name__)
-app.secret_key = "simdama_unpam_2024_secret"
 
 @app.context_processor
 def inject_globals():
@@ -357,6 +245,102 @@ def login_required(f):
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated
+
+# ===================== HELPER EMAIL =====================
+def send_email_via_brevo(to_email, subject, body, html_body):
+    """Kirim email via Brevo API"""
+    
+    url = "https://api.brevo.com/v3/smtp/email"
+    
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "api-key": BREVO_API_KEY
+    }
+    
+    payload = {
+        "sender": {
+            "name": SENDER_NAME,
+            "email": EMAIL_SENDER
+        },
+        "to": [
+            {
+                "email": to_email
+            }
+        ],
+        "subject": subject,
+        "htmlContent": html_body,
+        "textContent": body
+    }
+    
+    try:
+        print(f"📤 Mengirim ke: {to_email}")
+        response = requests.post(url, json=payload, headers=headers, timeout=30)
+        print(f"📊 Status: {response.status_code}")
+        print(f"📊 Response: {response.text[:200]}...")
+        
+        if response.status_code == 201:
+            return True, "Success"
+        else:
+            error_data = response.json()
+            error_msg = error_data.get('message', 'Unknown error')
+            return False, f"API Error {response.status_code}: {error_msg}"
+            
+    except Exception as e:
+        return False, str(e)
+
+def send_email_background(mhs, subject, message_template):
+    """Kirim email di background thread"""
+    try:
+        # Ganti placeholder untuk plain text
+        body = message_template
+        body = body.replace("[NAMA]", mhs.get("nama", ""))
+        body = body.replace("[NIM]", mhs.get("nim", ""))
+        body = body.replace("[PRODI]", mhs.get("prodi", ""))
+        body = body.replace("[SEMESTER]", str(mhs.get("semester", "")))
+        body = body.replace("[IPK]", str(mhs.get("ipk", "")))
+        
+        # Buat HTML dengan style sederhana
+        html_body = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif;">
+            <h2>Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA)</h2>
+            <p>Yth. <b>{mhs.get('nama', '')}</b>,</p>
+            <p>Data Anda telah terdaftar dalam sistem kami.</p>
+            <ul>
+                <li><b>NIM:</b> {mhs.get('nim', '')}</li>
+                <li><b>Program Studi:</b> {mhs.get('prodi', '')}</li>
+                <li><b>Semester:</b> {mhs.get('semester', '')}</li>
+                <li><b>IPK:</b> {mhs.get('ipk', '')}</li>
+            </ul>
+            <p>Login ke SIMDAMA menggunakan:</p>
+            <p><b>Username:</b> {mhs.get('nim', '')}<br>
+            <b>Password:</b> {mhs.get('nim', '')}123</p>
+            <p>Salam,<br>
+            <b>Tim SIMDAMA UNPAM</b></p>
+            <hr>
+            <small style="color: #888;">Email otomatis dari SIMDAMA UNPAM</small>
+        </body>
+        </html>
+        """
+        
+        email_subject = f"{subject} - {mhs.get('nama')}"
+        
+        success, msg = send_email_via_brevo(
+            mhs.get("email"), 
+            email_subject, 
+            body, 
+            html_body
+        )
+        
+        if success:
+            print(f"✅ Email terkirim ke {mhs.get('nama')} ({mhs.get('email')})")
+        else:
+            print(f"❌ Gagal kirim ke {mhs.get('nama')}: {msg}")
+            
+    except Exception as e:
+        print(f"❌ Error: {str(e)}")
+# =======================================================
 
 # ==================== ROUTES ====================
 
@@ -626,8 +610,6 @@ def sort_data():
 def complexity():
     return render_template("complexity.html")
 
-# ==================== ROUTE IMPORT MAHASISWA ====================
-
 @app.route("/mahasiswa/import", methods=["GET", "POST"])
 @login_required
 def import_mahasiswa():
@@ -731,8 +713,6 @@ def import_mahasiswa():
 def check_status():
     return jsonify({"status": "ok"})
 
-# ==================== ROUTE EKSPOR DATA ====================
-
 @app.route("/ekspor/csv")
 @login_required
 def ekspor_csv():
@@ -782,7 +762,8 @@ def ekspor_json():
         headers={'Content-Disposition': f'attachment; filename=Data_Mahasiswa_{datetime.now().strftime("%Y%m%d")}.json'}
     )
 
-# ==================== ROUTE KIRIM EMAIL (SEMUA MAHASISWA) ====================
+# ==================== ROUTE SEND EMAIL ====================
+
 @app.route("/send-email", methods=["GET", "POST"])
 @login_required
 def send_email():
@@ -801,159 +782,31 @@ def send_email():
                 flash("❌ Subject dan pesan harus diisi", "error")
                 return redirect(url_for("send_email"))
             
-            # HTML Template
-            html_template = f"""
-            <html>
-            <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-                <p>Yth. [NAMA],</p>
-                <p>Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.</p>
-                <p><b>Berikut data Anda:</b></p>
-                <ul>
-                    <li><b>NIM:</b> [NIM]</li>
-                    <li><b>Program Studi:</b> [PRODI]</li>
-                    <li><b>Semester:</b> [SEMESTER]</li>
-                    <li><b>IPK:</b> [IPK]</li>
-                </ul>
-                <p>Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:</p>
-                <p><b>Username:</b> [NIM]<br>
-                <b>Password:</b> [NIM]123</p>
-                <p>Terima kasih atas perhatiannya.</p>
-                <p>Salam,<br>
-                <b>Tim SIMDAMA UNPAM</b></p>
-                <hr>
-                <small style="color: #888;">Email ini dikirim secara otomatis oleh sistem SIMDAMA UNPAM.</small>
-            </body>
-            </html>
-            """
+            # Kirim ke semua mahasiswa
+            success_count = 0
+            fail_count = 0
             
-            # Kirim di background thread
-            threads = []
             for mhs in data:
                 email = mhs.get("email", "").strip()
                 if not email:
+                    fail_count += 1
                     continue
-                    
+                
+                # Kirim di background
                 thread = threading.Thread(
                     target=send_email_background,
-                    args=(mhs, subject, message_template, html_template)
+                    args=(mhs, subject, message_template)
                 )
                 thread.daemon = True
-                threads.append(thread)
                 thread.start()
+                success_count += 1
                 
-                # Batasi jumlah thread paralel
-                if len(threads) >= 5:
-                    for t in threads:
-                        t.join(timeout=1)
-                    threads = []
+                # Jangan terlalu banyak thread sekaligus
+                time.sleep(0.5)
             
-            # Tunggu semua thread selesai
-            for t in threads:
-                t.join(timeout=1)
-            
-            flash(f"📧 Email sedang dikirim ke semua mahasiswa di background!", "success")
-            return redirect(url_for("send_email"))
-            
-        except Exception as e:
-            flash(f"❌ Error: {str(e)}", "error")
-            return redirect(url_for("send_email"))
-    
-    return render_template("send_email.html", data=data, total=len(data))
-    data = baca_mahasiswa()
-    
-    if session.get("role") not in ["Admin", "Dosen"]:
-        flash("❌ Hanya Admin dan Dosen yang dapat mengirim email", "error")
-        return redirect(url_for("dashboard"))
-    
-    if request.method == "POST":
-        try:
-            subject = request.form.get("subject", "").strip()
-            message_template = request.form.get("message", "").strip()
-            
-            if not subject or not message_template:
-                flash("❌ Subject dan pesan harus diisi", "error")
-                return redirect(url_for("send_email"))
-            
-            success_count = 0
-            fail_count = 0
-            error_log = []
-            
-            for mhs in data:
-                email_mhs = mhs.get("email", "").strip()
-                if not email_mhs:
-                    fail_count += 1
-                    error_log.append(f"{mhs.get('nama')} - Email kosong")
-                    continue
-                
-                try:
-                    # Ganti placeholder
-                    body = message_template
-                    body = body.replace("[NAMA]", mhs.get("nama", ""))
-                    body = body.replace("[NIM]", mhs.get("nim", ""))
-                    body = body.replace("[PRODI]", mhs.get("prodi", ""))
-                    body = body.replace("[SEMESTER]", str(mhs.get("semester", "")))
-                    body = body.replace("[IPK]", str(mhs.get("ipk", "")))
-                    
-                    # HTML Version
-                    html_body = f"""
-                    <html>
-                    <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-                        <p>Yth. {mhs.get('nama', '')},</p>
-                        <p>Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.</p>
-                        <p><b>Berikut data Anda:</b></p>
-                        <ul>
-                            <li><b>NIM:</b> {mhs.get('nim', '')}</li>
-                            <li><b>Program Studi:</b> {mhs.get('prodi', '')}</li>
-                            <li><b>Semester:</b> {mhs.get('semester', '')}</li>
-                            <li><b>IPK:</b> {mhs.get('ipk', '')}</li>
-                        </ul>
-                        <p>Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:</p>
-                        <p><b>Username:</b> {mhs.get('nim', '')}<br>
-                        <b>Password:</b> {mhs.get('nim', '')}123</p>
-                        <p>Terima kasih atas perhatiannya.</p>
-                        <p>Salam,<br>
-                        <b>Tim SIMDAMA UNPAM</b></p>
-                        <hr>
-                        <small style="color: #888;">Email ini dikirim secara otomatis oleh sistem SIMDAMA UNPAM.</small>
-                    </body>
-                    </html>
-                    """
-                    
-                    msg = MIMEMultipart('alternative')
-                    msg['From'] = f"SIMDAMA UNPAM <{EMAIL_SENDER}>"
-                    msg['To'] = email_mhs
-                    msg['Subject'] = f"{subject} - {mhs.get('nama')}"
-                    
-                    msg.attach(MIMEText(body, 'plain'))
-                    msg.attach(MIMEText(html_body, 'html'))
-                    
-                    server = smtplib.SMTP(
-                        SMTP_SERVER,
-                        SMTP_PORT,
-                        timeout=15
-                    )
-                    server.starttls()
-                    server.login(SMTP_USERNAME, SMTP_PASSWORD)
-                    try:
-                        server.send_message(msg)
-                    except Exception as e:
-                        flash(f"Gagal mengirim email: {e}", "danger")
-                        return redirect(request.url)
-                    finally:
-                        server.quit()
-                    
-                    success_count += 1
-                    
-                except Exception as e:
-                    fail_count += 1
-                    error_log.append(f"{mhs.get('nama')} - {str(e)[:50]}")
-            
-            if success_count > 0:
-                flash(f"✅ Berhasil mengirim ke {success_count} mahasiswa", "success")
+            flash(f"📧 Email sedang dikirim ke {success_count} mahasiswa di background!", "success")
             if fail_count > 0:
-                flash(f"❌ Gagal mengirim ke {fail_count} mahasiswa", "error")
-                if error_log:
-                    flash(f"Detail: {', '.join(error_log[:3])}", "error")
+                flash(f"⚠️ {fail_count} mahasiswa tidak memiliki email", "error")
             
             return redirect(url_for("send_email"))
             
@@ -962,8 +815,6 @@ def send_email():
             return redirect(url_for("send_email"))
     
     return render_template("send_email.html", data=data, total=len(data))
-
-# ==================== ROUTE KIRIM EMAIL PER MAHASISWA (FIX SPAM) ====================
 
 @app.route("/send-email/<nim>", methods=["GET", "POST"])
 @login_required
@@ -987,92 +838,50 @@ def send_email_specific(nim):
     if request.method == "POST":
         try:
             subject = request.form.get("subject", "").strip()
-            message_template = request.form.get("message", "").strip()
+            message = request.form.get("message", "").strip()
             
-            if not subject or not message_template:
+            if not subject or not message:
                 flash("❌ Subject dan pesan harus diisi", "error")
                 return render_template("send_email_specific.html", mhs=mhs)
             
-            # HTML Template
-            html_template = f"""
-            <html>
-            <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-                <p>Yth. [NAMA],</p>
-                <p>Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.</p>
-                <p><b>Berikut data Anda:</b></p>
-                <ul>
-                    <li><b>NIM:</b> [NIM]</li>
-                    <li><b>Program Studi:</b> [PRODI]</li>
-                    <li><b>Semester:</b> [SEMESTER]</li>
-                    <li><b>IPK:</b> [IPK]</li>
-                </ul>
-                <p>Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:</p>
-                <p><b>Username:</b> [NIM]<br>
-                <b>Password:</b> [NIM]123</p>
-                <p>Terima kasih atas perhatiannya.</p>
-                <p>Salam,<br>
-                <b>Tim SIMDAMA UNPAM</b></p>
-                <hr>
-                <small style="color: #888;">Email ini dikirim secara otomatis oleh sistem SIMDAMA UNPAM.</small>
-            </body>
-            </html>
-            """
-            
-            # Kirim di background thread
-            thread = threading.Thread(
-                target=send_email_background,
-                args=(mhs, subject, message_template, html_template)
+            # Kirim langsung
+            success, msg = send_email_via_brevo(
+                mhs.get("email"),
+                f"{subject} - {mhs.get('nama')}",
+                message,
+                f"""
+                <html>
+                <body style="font-family: Arial, sans-serif;">
+                    <h2>SIMDAMA UNPAM</h2>
+                    <p>Yth. <b>{mhs.get('nama', '')}</b>,</p>
+                    <p>{message}</p>
+                    <hr>
+                    <small style="color: #888;">Email otomatis dari SIMDAMA UNPAM</small>
+                </body>
+                </html>
+                """
             )
-            thread.daemon = True
-            thread.start()
             
-            flash(f"📧 Email sedang dikirim ke {mhs.get('nama')} di background!", "success")
+            if success:
+                flash(f"✅ Email berhasil dikirim ke {mhs.get('nama')} ({mhs.get('email')})", "success")
+            else:
+                flash(f"❌ Gagal: {msg}", "error")
+            
             return redirect(url_for("mahasiswa"))
             
         except Exception as e:
             flash(f"❌ Error: {str(e)}", "error")
             return render_template("send_email_specific.html", mhs=mhs)
     
-    # Buat pesan default
     default_message = f"""Yth. {mhs.get('nama', '')},
 
-Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.
+Kami informasikan data Anda di SIMDAMA:
+NIM: {mhs.get('nim', '')}
+Prodi: {mhs.get('prodi', '')}
+Semester: {mhs.get('semester', '')}
+IPK: {mhs.get('ipk', '')}
 
-Berikut data Anda:
-• NIM: {mhs.get('nim', '')}
-• Program Studi: {mhs.get('prodi', '')}
-• Semester: {mhs.get('semester', '')}
-• IPK: {mhs.get('ipk', '')}
-
-Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:
-Username: {mhs.get('nim', '')}
-Password: {mhs.get('nim', '')}123
-
-Terima kasih atas perhatiannya.
-
-Salam,
-Tim SIMDAMA UNPAM"""
-    
-    return render_template("send_email_specific.html", mhs=mhs, default_message=default_message)
-    
-    # Buat pesan default
-    default_message = f"""Yth. {mhs.get('nama', '')},
-
-Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.
-
-Berikut data Anda:
-• NIM: {mhs.get('nim', '')}
-• Program Studi: {mhs.get('prodi', '')}
-• Semester: {mhs.get('semester', '')}
-• IPK: {mhs.get('ipk', '')}
-
-Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:
-Username: {mhs.get('nim', '')}
-Password: {mhs.get('nim', '')}123
-
-Terima kasih atas perhatiannya.
-
-Salam,
+Login: {mhs.get('nim', '')} / {mhs.get('nim', '')}123Salam,
 Tim SIMDAMA UNPAM"""
     
     return render_template("send_email_specific.html", mhs=mhs, default_message=default_message)
