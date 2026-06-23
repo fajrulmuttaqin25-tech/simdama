@@ -673,11 +673,11 @@ def send_email():
                 flash("❌ Subject dan pesan harus diisi", "error")
                 return redirect(url_for("send_email"))
             
-            EMAIL_SENDER = "fajrulmuttaqin25@gmail.com"
-            EMAIL_PASSWORD = "scpz qeev ybli hrfc"
-            
-            SMTP_SERVER = "smtp.gmail.com"
-            SMTP_PORT = 587
+            EMAIL_SENDER = os.getenv("EMAIL_SENDER")
+            EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+
+            SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp-relay.brevo.com")
+            SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
             
             success_count = 0
             fail_count = 0
@@ -732,12 +732,21 @@ def send_email():
                     msg.attach(MIMEText(body, 'plain'))
                     msg.attach(MIMEText(html_body, 'html'))
                     
-                    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+                    server = smtplib.SMTP(
+                        SMTP_SERVER,
+                        SMTP_PORT,
+                        timeout=15
+                    )
                     server.starttls()
                     server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-                    server.send_message(msg)
+                    try:
+                        server.send_message(msg)
+                    except Exception as e:
+                        flash(f"Gagal mengirim email: {e}", "danger")
+                        return redirect(request.url)
+                    finally:
+                        server.quit()
                     server.quit()
-                    
                     success_count += 1
                     
                 except Exception as e:
