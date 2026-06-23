@@ -1,7 +1,3 @@
-"""
-SIMDAMA - Sistem Informasi Manajemen Data Mahasiswa
-Universitas Pamulang (UNPAM)
-"""
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 import json, os, re, copy, csv
@@ -116,110 +112,6 @@ def baca_users():
     except Exception:
         return default
 
-def linear_search(data, keyword, field):
-    return [m for m in data if keyword.lower() in str(m.get(field,"")).lower()]
-
-def binary_search(data, nim_target):
-    arr = sorted(data, key=lambda m: m["nim"])
-    lo, hi = 0, len(arr)-1
-    while lo <= hi:
-        mid = (lo+hi)//2
-        if arr[mid]["nim"] == nim_target:
-            return arr[mid]
-        elif arr[mid]["nim"] < nim_target:
-            lo = mid+1
-        else:
-            hi = mid-1
-    return None
-
-def sequential_search(data, nim_target):
-    for m in data:
-        if m["nim"] == nim_target:
-            return m
-    return None
-
-def get_val(m, key):
-    v = m.get(key, "")
-    try:
-        return float(v)
-    except:
-        return str(v).lower()
-
-def bubble_sort(data, key, reverse=False):
-    arr = copy.deepcopy(data)
-    n = len(arr)
-    for i in range(n):
-        for j in range(0, n-i-1):
-            cond = get_val(arr[j], key) > get_val(arr[j+1], key)
-            if reverse:
-                cond = not cond
-            if cond:
-                arr[j], arr[j+1] = arr[j+1], arr[j]
-    return arr
-
-def insertion_sort(data, key, reverse=False):
-    arr = copy.deepcopy(data)
-    for i in range(1, len(arr)):
-        cur = arr[i]
-        j = i-1
-        while j >= 0 and ((not reverse and get_val(arr[j],key) > get_val(cur,key)) or
-                          (reverse and get_val(arr[j],key) < get_val(cur,key))):
-            arr[j+1] = arr[j]
-            j -= 1
-        arr[j+1] = cur
-    return arr
-
-def selection_sort(data, key, reverse=False):
-    arr = copy.deepcopy(data)
-    n = len(arr)
-    for i in range(n):
-        idx = i
-        for j in range(i+1, n):
-            cond = get_val(arr[j],key) < get_val(arr[idx],key)
-            if reverse:
-                cond = get_val(arr[j],key) > get_val(arr[idx],key)
-            if cond:
-                idx = j
-        arr[i], arr[idx] = arr[idx], arr[i]
-    return arr
-
-def merge_sort(data, key, reverse=False):
-    if len(data) <= 1:
-        return data[:]
-    mid = len(data)//2
-    L = merge_sort(data[:mid], key, reverse)
-    R = merge_sort(data[mid:], key, reverse)
-    result, i, j = [], 0, 0
-    while i < len(L) and j < len(R):
-        cond = get_val(L[i],key) <= get_val(R[j],key)
-        if reverse:
-            cond = get_val(L[i],key) >= get_val(R[j],key)
-        if cond:
-            result.append(L[i])
-            i += 1
-        else:
-            result.append(R[j])
-            j += 1
-    result.extend(L[i:])
-    result.extend(R[j:])
-    return result
-
-def shell_sort(data, key, reverse=False):
-    arr = copy.deepcopy(data)
-    n = len(arr)
-    gap = n//2
-    while gap > 0:
-        for i in range(gap, n):
-            temp = arr[i]
-            j = i
-            while j >= gap and ((not reverse and get_val(arr[j-gap],key) > get_val(temp,key)) or
-                                (reverse and get_val(arr[j-gap],key) < get_val(temp,key))):
-                arr[j] = arr[j-gap]
-                j -= gap
-            arr[j] = temp
-        gap //= 2
-    return arr
-
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -244,27 +136,21 @@ def login():
         try:
             if not username or not password:
                 raise ValidationError("Username dan password tidak boleh kosong.")
-            
             if username not in users:
                 raise ValidationError("Username/NIM tidak ditemukan.")
-            
             u = users[username]
             try:
                 pwd_ok = check_password_hash(u["password"], password)
             except Exception:
                 pwd_ok = (u["password"] == password)
-            
             if not pwd_ok:
                 raise ValidationError("Password salah. Coba lagi.")
-            
             session["username"] = username
             session["role"] = u["role"]
             session["nama"] = u.get("nama", username)
-            
             return redirect(url_for("dashboard"))
         except ValidationError as e:
             error = str(e)
-    
     return render_template("login.html", error=error)
 
 @app.route("/logout")
@@ -327,7 +213,6 @@ def tambah():
                 "tgl_daftar": datetime.now().strftime("%d-%m-%Y %H:%M")
             })
             simpan_mahasiswa(data)
-            
             users = baca_users()
             if nim not in users:
                 users[nim] = {
@@ -337,7 +222,6 @@ def tambah():
                 }
                 with open(USERS_FILE, "w") as f:
                     json.dump(users, f, indent=2)
-            
             flash(f"✅ Mahasiswa {nama} berhasil ditambahkan!", "success")
             return redirect(url_for("mahasiswa"))
         except (ValidationError, DuplicateNIMError) as e:
@@ -374,13 +258,11 @@ def edit(nim):
                     m["no_hp"] = no_hp
                     break
             simpan_mahasiswa(all_data)
-            
             users = baca_users()
             if nim in users:
                 users[nim]["nama"] = nama
                 with open(USERS_FILE, "w") as f:
                     json.dump(users, f, indent=2)
-            
             flash(f"✅ Data {nama} berhasil diperbarui!", "success")
             return redirect(url_for("mahasiswa"))
         except ValidationError as e:
@@ -400,366 +282,15 @@ def hapus(nim):
         flash("❌ Mahasiswa tidak ditemukan.", "error")
     else:
         simpan_mahasiswa(baru)
-        
         users = baca_users()
         if nim in users:
             del users[nim]
             with open(USERS_FILE, "w") as f:
                 json.dump(users, f, indent=2)
-        
         flash("✅ Data mahasiswa berhasil dihapus.", "success")
     return redirect(url_for("mahasiswa"))
 
-@app.route("/cari", methods=["GET","POST"])
-@login_required
-def cari():
-    hasil, info, keyword, algo, field = [], "", "", "linear", "nama"
-    
-    if request.method == "POST":
-        keyword = request.form.get("keyword","").strip()
-        algo = request.form.get("algo","linear")
-        field = request.form.get("field","nama")
-        data = baca_mahasiswa()
-        try:
-            if not keyword:
-                raise ValidationError("Masukkan kata kunci pencarian.")
-            
-            import time
-            
-            if algo == "linear":
-                start = time.perf_counter()
-                hasil = linear_search(data, keyword, field)
-                end = time.perf_counter()
-                waktu = (end - start) * 1_000_000
-                waktu_eksekusi = f"{waktu:.2f} µs" if waktu < 1000 else f"{waktu/1000:.2f} ms"
-                info = f"Linear Search &mdash; <b>{len(hasil)} hasil</b> ditemukan"
-                
-            elif algo == "binary":
-                start = time.perf_counter()
-                found = binary_search(data, keyword)
-                end = time.perf_counter()
-                waktu = (end - start) * 1_000_000
-                waktu_eksekusi = f"{waktu:.2f} µs" if waktu < 1000 else f"{waktu/1000:.2f} ms"
-                hasil = [found] if found else []
-                info = f"Binary Search &mdash; <b>{'1 hasil' if found else '0 hasil'}</b> ditemukan"
-                
-            else:
-                start = time.perf_counter()
-                found = sequential_search(data, keyword)
-                end = time.perf_counter()
-                waktu = (end - start) * 1_000_000
-                waktu_eksekusi = f"{waktu:.2f} µs" if waktu < 1000 else f"{waktu/1000:.2f} ms"
-                hasil = [found] if found else []
-                info = f"Sequential Search &mdash; <b>{'1 hasil' if found else '0 hasil'}</b> ditemukan"
-                
-            info += f"&nbsp;|&nbsp; ⏱️ Waktu eksekusi: <b>{waktu_eksekusi}</b>"
-            
-        except ValidationError as e:
-            flash(str(e), "error")
-    
-    return render_template("cari.html", hasil=hasil, info=info,
-                           keyword=keyword, algo=algo, field=field)
-
-@app.route("/sort", methods=["GET","POST"])
-@login_required
-def sort_data():
-    data = baca_mahasiswa()
-    hasil = data[:]
-    algo, key, order, info = "bubble", "nim", "asc", ""
-    
-    if request.method == "POST":
-        algo = request.form.get("algo","bubble")
-        key = request.form.get("key","nim")
-        order = request.form.get("order","asc")
-        rev = (order == "desc")
-        
-        algo_map = {"bubble":bubble_sort,"insertion":insertion_sort,
-                    "selection":selection_sort,"merge":merge_sort,"shell":shell_sort}
-        complexity = {"bubble":"O(n²)","insertion":"O(n²)","selection":"O(n²)",
-                      "merge":"O(n log n)","shell":"O(n log n)"}
-        
-        import time
-        start = time.perf_counter()
-        hasil = algo_map.get(algo, bubble_sort)(data, key, rev)
-        end = time.perf_counter()
-        waktu = (end - start) * 1_000_000
-        waktu_eksekusi = f"{waktu:.2f} µs" if waktu < 1000 else f"{waktu/1000:.2f} ms"
-        
-        asc_desc = "Descending ↓" if rev else "Ascending ↑"
-        info = f"{algo.capitalize()} Sort &nbsp;|&nbsp; Kunci: <b>{key}</b> &nbsp;|&nbsp; {asc_desc} &nbsp;|&nbsp; Complexity: <code>{complexity[algo]}</code>"
-        info += f"&nbsp;|&nbsp; ⏱️ Waktu eksekusi: <b>{waktu_eksekusi}</b>"
-    
-    return render_template("sort.html", hasil=hasil, algo=algo,
-                           key=key, order=order, info=info)
-
-@app.route("/complexity")
-@login_required
-def complexity():
-    return render_template("complexity.html")
-
-# ==================== ROUTE IMPORT MAHASISWA ====================
-
-@app.route("/mahasiswa/import", methods=["GET", "POST"])
-@login_required
-def import_mahasiswa():
-    if request.method == "POST":
-        if 'file' not in request.files:
-            flash("❌ Pilih file terlebih dahulu", "error")
-            return redirect(request.url)
-        
-        file = request.files['file']
-        
-        if file.filename == '':
-            flash("❌ File tidak dipilih", "error")
-            return redirect(request.url)
-        
-        if not file.filename.endswith('.csv'):
-            flash("❌ Hanya file CSV yang didukung", "error")
-            return redirect(request.url)
-        
-        try:
-            content = file.read().decode('utf-8')
-            lines = content.strip().split('\n')
-            
-            if len(lines) < 2:
-                flash("❌ File kosong", "error")
-                return redirect(request.url)
-            
-            existing_data = baca_mahasiswa()
-            existing_nims = [m['nim'] for m in existing_data]
-            success_count = 0
-            error_count = 0
-            
-            for idx, line in enumerate(lines[1:], start=2):
-                if not line.strip():
-                    continue
-                
-                values = line.strip().split(',')
-                
-                if len(values) < 7:
-                    error_count += 1
-                    continue
-                
-                nim = values[0].strip()
-                nama = values[1].strip()
-                email = values[2].strip() if len(values) > 2 else ''
-                no_hp = values[3].strip() if len(values) > 3 else ''
-                prodi = values[4].strip() if len(values) > 4 else 'Teknik Informatika'
-                semester = values[5].strip() if len(values) > 5 else '1'
-                ipk = values[6].strip() if len(values) > 6 else '0'
-                
-                if not nim or not nama:
-                    error_count += 1
-                    continue
-                
-                if nim in existing_nims:
-                    error_count += 1
-                    continue
-                
-                existing_data.append({
-                    'nim': nim,
-                    'nama': nama,
-                    'prodi': prodi,
-                    'semester': int(semester) if semester.isdigit() else 1,
-                    'ipk': float(ipk) if ipk else 0,
-                    'email': email,
-                    'no_hp': no_hp,
-                    'tgl_daftar': datetime.now().strftime("%d-%m-%Y %H:%M")
-                })
-                success_count += 1
-                existing_nims.append(nim)
-            
-            simpan_mahasiswa(existing_data)
-            
-            users = baca_users()
-            for mhs in existing_data[-success_count:]:
-                nim = mhs.get('nim')
-                nama = mhs.get('nama')
-                if nim and nim not in users:
-                    users[nim] = {
-                        "password": generate_password_hash(f"{nim}123"),
-                        "role": "Mahasiswa",
-                        "nama": nama
-                    }
-            with open(USERS_FILE, "w") as f:
-                json.dump(users, f, indent=2)
-            
-            if success_count > 0:
-                flash(f"✅ Berhasil import {success_count} mahasiswa", "success")
-            if error_count > 0:
-                flash(f"⚠️ {error_count} baris gagal diimport", "error")
-            
-            return redirect(url_for('mahasiswa'))
-            
-        except Exception as e:
-            flash(f"❌ Error: {str(e)}", "error")
-            return redirect(request.url)
-    
-    return render_template("import_mahasiswa.html")
-
-@app.route("/check-status")
-@login_required
-def check_status():
-    return jsonify({"status": "ok"})
-
-# ==================== ROUTE EKSPOR DATA ====================
-
-@app.route("/ekspor/csv")
-@login_required
-def ekspor_csv():
-    data = baca_mahasiswa()
-    
-    if not data:
-        flash("❌ Tidak ada data untuk diekspor", "error")
-        return redirect(url_for("mahasiswa"))
-    
-    output = StringIO()
-    writer = csv.writer(output)
-    
-    writer.writerow(['NIM', 'Nama', 'Program Studi', 'Semester', 'IPK', 'Email', 'No HP', 'Tanggal Daftar'])
-    
-    for m in data:
-        writer.writerow([
-            m.get('nim', ''),
-            m.get('nama', ''),
-            m.get('prodi', ''),
-            m.get('semester', ''),
-            m.get('ipk', ''),
-            m.get('email', ''),
-            m.get('no_hp', ''),
-            m.get('tgl_daftar', '')
-        ])
-    
-    output.seek(0)
-    
-    return Response(
-        output.getvalue(),
-        mimetype='text/csv',
-        headers={'Content-Disposition': f'attachment; filename=Data_Mahasiswa_{datetime.now().strftime("%Y%m%d")}.csv'}
-    )
-
-@app.route("/ekspor/json")
-@login_required
-def ekspor_json():
-    data = baca_mahasiswa()
-    
-    if not data:
-        flash("❌ Tidak ada data untuk diekspor", "error")
-        return redirect(url_for("mahasiswa"))
-    
-    return Response(
-        json.dumps(data, indent=2, ensure_ascii=False),
-        mimetype='application/json',
-        headers={'Content-Disposition': f'attachment; filename=Data_Mahasiswa_{datetime.now().strftime("%Y%m%d")}.json'}
-    )
-
-# ==================== ROUTE KIRIM EMAIL (SEMUA MAHASISWA) ====================
-
-@app.route("/send-email", methods=["GET", "POST"])
-@login_required
-def send_email():
-    data = baca_mahasiswa()
-    
-    if session.get("role") not in ["Admin", "Dosen"]:
-        flash("❌ Hanya Admin dan Dosen yang dapat mengirim email", "error")
-        return redirect(url_for("dashboard"))
-    
-    if request.method == "POST":
-        try:
-            subject = request.form.get("subject", "").strip()
-            message_template = request.form.get("message", "").strip()
-            
-            if not subject or not message_template:
-                flash("❌ Subject dan pesan harus diisi", "error")
-                return redirect(url_for("send_email"))
-            
-            EMAIL_SENDER = "fajrulmuttaqin25@gmail.com"
-            EMAIL_PASSWORD = "scpz qeev ybli hrfc"
-            
-            SMTP_SERVER = "smtp.gmail.com"
-            SMTP_PORT = 587
-            
-            success_count = 0
-            fail_count = 0
-            error_log = []
-            
-            for mhs in data:
-                email_mhs = mhs.get("email", "").strip()
-                if not email_mhs:
-                    fail_count += 1
-                    error_log.append(f"{mhs.get('nama')} - Email kosong")
-                    continue
-                
-                try:
-                    # Ganti placeholder
-                    body = message_template
-                    body = body.replace("[NAMA]", mhs.get("nama", ""))
-                    body = body.replace("[NIM]", mhs.get("nim", ""))
-                    body = body.replace("[PRODI]", mhs.get("prodi", ""))
-                    body = body.replace("[SEMESTER]", str(mhs.get("semester", "")))
-                    body = body.replace("[IPK]", str(mhs.get("ipk", "")))
-                    
-                    # HTML Version
-                    html_body = f"""
-                    <html>
-                    <body style="font-family: Arial, sans-serif; line-height: 1.6;">
-                        <p>Yth. {mhs.get('nama', '')},</p>
-                        <p>Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.</p>
-                        <p><b>Berikut data Anda:</b></p>
-                        <ul>
-                            <li><b>NIM:</b> {mhs.get('nim', '')}</li>
-                            <li><b>Program Studi:</b> {mhs.get('prodi', '')}</li>
-                            <li><b>Semester:</b> {mhs.get('semester', '')}</li>
-                            <li><b>IPK:</b> {mhs.get('ipk', '')}</li>
-                        </ul>
-                        <p>Untuk informasi lebih lanjut, silahkan login ke sistem SIMDAMA menggunakan:</p>
-                        <p><b>Username:</b> {mhs.get('nim', '')}<br>
-                        <b>Password:</b> {mhs.get('nim', '')}123</p>
-                        <p>Terima kasih atas perhatiannya.</p>
-                        <p>Salam,<br>
-                        <b>Tim SIMDAMA UNPAM</b></p>
-                        <hr>
-                        <small style="color: #888;">Email ini dikirim secara otomatis oleh sistem SIMDAMA UNPAM.</small>
-                    </body>
-                    </html>
-                    """
-                    
-                    msg = MIMEMultipart('alternative')
-                    msg['From'] = f"SIMDAMA UNPAM <{EMAIL_SENDER}>"
-                    msg['To'] = email_mhs
-                    msg['Subject'] = f"{subject} - {mhs.get('nama')}"
-                    
-                    msg.attach(MIMEText(body, 'plain'))
-                    msg.attach(MIMEText(html_body, 'html'))
-                    
-                    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-                    server.starttls()
-                    server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-                    server.send_message(msg)
-                    server.quit()
-                    
-                    success_count += 1
-                    
-                except Exception as e:
-                    fail_count += 1
-                    error_log.append(f"{mhs.get('nama')} - {str(e)[:50]}")
-            
-            if success_count > 0:
-                flash(f"✅ Berhasil mengirim ke {success_count} mahasiswa", "success")
-            if fail_count > 0:
-                flash(f"❌ Gagal mengirim ke {fail_count} mahasiswa", "error")
-                if error_log:
-                    flash(f"Detail: {', '.join(error_log[:3])}", "error")
-            
-            return redirect(url_for("send_email"))
-            
-        except Exception as e:
-            flash(f"❌ Error: {str(e)}", "error")
-            return redirect(url_for("send_email"))
-    
-    return render_template("send_email.html", data=data, total=len(data))
-
-# ==================== ROUTE KIRIM EMAIL PER MAHASISWA (FIX SPAM) ====================
+# ==================== ROUTE KIRIM EMAIL PER MAHASISWA ====================
 
 @app.route("/send-email/<nim>", methods=["GET", "POST"])
 @login_required
@@ -789,6 +320,7 @@ def send_email_specific(nim):
                 flash("❌ Subject dan pesan harus diisi", "error")
                 return render_template("send_email_specific.html", mhs=mhs)
             
+            # HARCODE EMAIL (GA PAKE ENVIRONMENT VARIABLES)
             EMAIL_SENDER = "fajrulmuttaqin25@gmail.com"
             EMAIL_PASSWORD = "scpz qeev ybli hrfc"
             
@@ -797,7 +329,6 @@ def send_email_specific(nim):
             
             email_mhs = mhs.get("email", "").strip()
             
-            # Ganti placeholder
             body = message_template
             body = body.replace("[NAMA]", mhs.get("nama", ""))
             body = body.replace("[NIM]", mhs.get("nim", ""))
@@ -805,7 +336,6 @@ def send_email_specific(nim):
             body = body.replace("[SEMESTER]", str(mhs.get("semester", "")))
             body = body.replace("[IPK]", str(mhs.get("ipk", "")))
             
-            # HTML Version
             html_body = f"""
             <html>
             <body style="font-family: Arial, sans-serif; line-height: 1.6;">
@@ -830,33 +360,27 @@ def send_email_specific(nim):
             </html>
             """
             
-            try:
-                msg = MIMEMultipart('alternative')
-                msg['From'] = f"SIMDAMA UNPAM <{EMAIL_SENDER}>"
-                msg['To'] = email_mhs
-                msg['Subject'] = f"{subject} - {mhs.get('nama')}"
-                
-                msg.attach(MIMEText(body, 'plain'))
-                msg.attach(MIMEText(html_body, 'html'))
-                
-                server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
-                server.starttls()
-                server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-                server.send_message(msg)
-                server.quit()
-                
-                flash(f"✅ Email berhasil dikirim ke {mhs.get('nama')} ({email_mhs})", "success")
-                return redirect(url_for("mahasiswa"))
-                
-            except Exception as e:
-                flash(f"❌ Gagal mengirim email ke {mhs.get('nama')}: {str(e)}", "error")
-                return render_template("send_email_specific.html", mhs=mhs)
+            msg = MIMEMultipart('alternative')
+            msg['From'] = f"SIMDAMA UNPAM <{EMAIL_SENDER}>"
+            msg['To'] = email_mhs
+            msg['Subject'] = f"{subject} - {mhs.get('nama')}"
+            
+            msg.attach(MIMEText(body, 'plain'))
+            msg.attach(MIMEText(html_body, 'html'))
+            
+            server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+            server.starttls()
+            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+            server.send_message(msg)
+            server.quit()
+            
+            flash(f"✅ Email berhasil dikirim ke {mhs.get('nama')} ({email_mhs})", "success")
+            return redirect(url_for("mahasiswa"))
             
         except Exception as e:
-            flash(f"❌ Error: {str(e)}", "error")
+            flash(f"❌ Gagal mengirim email: {str(e)}", "error")
             return render_template("send_email_specific.html", mhs=mhs)
     
-    # Buat pesan default
     default_message = f"""Yth. {mhs.get('nama', '')},
 
 Kami dari Sistem Informasi Manajemen Data Mahasiswa (SIMDAMA) Universitas Pamulang (UNPAM) menginformasikan bahwa data Anda telah terdaftar dalam sistem kami.
