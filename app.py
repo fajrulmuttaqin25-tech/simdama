@@ -12,6 +12,16 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+# ===================== SMTP CONFIG =====================
+SMTP_USERNAME = os.getenv("SMTP_USERNAME")
+SMTP_PASSWORD = os.getenv("EMAIL_PASSWORD")
+
+EMAIL_SENDER = os.getenv("EMAIL_SENDER")
+
+SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp-relay.brevo.com")
+SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
+# =======================================================
+
 app = Flask(__name__)
 app.secret_key = "simdama_unpam_2024_secret"
 
@@ -672,14 +682,6 @@ def send_email():
             if not subject or not message_template:
                 flash("❌ Subject dan pesan harus diisi", "error")
                 return redirect(url_for("send_email"))
-            
-            SMTP_USERNAME = os.getenv("SMTP_USERNAME")
-            SMTP_PASSWORD = os.getenv("EMAIL_PASSWORD")
-            
-            EMAIL_SENDER = os.getenv("EMAIL_SENDER")
-
-            SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp-relay.brevo.com")
-            SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
             
             success_count = 0
             fail_count = 0
