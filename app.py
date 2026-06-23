@@ -19,15 +19,9 @@ app = Flask(__name__)
 app.secret_key = "simdama_unpam_2024_secret"
 
 # ===================== BREVO API CONFIG =====================
-# HARDCODE UNTUK TESTING - GANTI DENGAN DATA BREVO ANDA
-BREVO_API_KEY = "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"  # GANTI!
-EMAIL_SENDER = "fajrulmuttaqin3@gmail.com"  # GANTI dengan email Brevo Anda!
-SENDER_NAME = "SIMDAMA UNPAM"
-BREVO_API_URL = "https://api.brevo.com/v3/smtp/email"
-
-print(f"🔑 API Key loaded: {BREVO_API_KEY[:15]}...")
-print(f"📧 Email Sender: {EMAIL_SENDER}")
-print(f"📛 Sender Name: {SENDER_NAME}")
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+EMAIL_SENDER = os.getenv("EMAIL_SENDER")
+SENDER_NAME = os.getenv("SENDER_NAME", "SIMDAMA UNPAM")
 # =======================================================
 
 # Cek API Key
