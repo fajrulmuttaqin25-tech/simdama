@@ -1,3 +1,1 @@
 Flask
-Werkzeug
-Jinja2
