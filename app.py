@@ -738,7 +738,7 @@ def send_email():
                         timeout=15
                     )
                     server.starttls()
-                    server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+                    server.login(SMTP_USERNAME, SMTP_PASSWORD)
                     try:
                         server.send_message(msg)
                     except Exception as e:
